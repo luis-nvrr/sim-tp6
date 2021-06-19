@@ -57,6 +57,8 @@ namespace Numeros_aleatorios.Colas
         private int filaDesde;
         private int filaHasta;
 
+        public int contadorLlegadas;
+
         public Linea(int cantidadCajas, int mediaLLegada, int mediaFinInforme, double a, double b)
         {
             this.llegadaCliente = mediaLLegada;
@@ -119,6 +121,7 @@ namespace Numeros_aleatorios.Colas
             acumuladorTiempoOcupacionVentanillaInformes = anterior.acumuladorTiempoOcupacionVentanillaInformes;
             acumuladorTiempoOciosoVentanillaActualizacion = anterior.acumuladorTiempoOciosoVentanillaActualizacion;
             tiempoMaximoEsperaEnCola = anterior.tiempoMaximoEsperaEnCola;
+            contadorLlegadas = anterior.contadorLlegadas;
         }
 
 
@@ -185,6 +188,13 @@ namespace Numeros_aleatorios.Colas
                 }
             }
 
+            if (this.evento.Equals(LLEGADA_PERSONA)) { contadorLlegadas++; }
+        }
+
+
+        public Boolean tieneLlegadasCumplidas()
+        {
+            return this.contadorLlegadas >= 60;
         }
 
         public void calcularSiguienteLlegada() {

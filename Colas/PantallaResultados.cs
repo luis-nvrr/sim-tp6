@@ -13,7 +13,7 @@ namespace Numeros_aleatorios.Colas
     public partial class PantallaResultados : Form
     {
         private int paginaActual;
-        private ColasMunicipalidad colas;
+        private GestorSimulacion gestor;
         private int filaSeleccionada;
         int cantSimulaciones;
         int desde;
@@ -79,18 +79,18 @@ namespace Numeros_aleatorios.Colas
 
         private void btnSiguiente_Click(object sender, EventArgs e)
         {
-            filaSeleccionada = grdRangoResultados.CurrentCell.RowIndex; 
-            paginaActual++;
-            colas.mostrarPagina(paginaActual);
-            grdRangoResultados.CurrentCell = grdRangoResultados.Rows[filaSeleccionada].Cells[0];
+            //filaSeleccionada = grdRangoResultados.CurrentCell.RowIndex; 
+            //paginaActual++;
+            //gestor.mostrarPagina(paginaActual);
+            //grdRangoResultados.CurrentCell = grdRangoResultados.Rows[filaSeleccionada].Cells[0];
         }
 
         private void btnAnterior_Click(object sender, EventArgs e)
         {
-            filaSeleccionada = grdRangoResultados.CurrentCell.RowIndex;
-            paginaActual--;
-            colas.mostrarPagina(paginaActual);
-            grdRangoResultados.CurrentCell = grdRangoResultados.Rows[filaSeleccionada].Cells[0];
+            //filaSeleccionada = grdRangoResultados.CurrentCell.RowIndex;
+            //paginaActual--;
+            //gestor.mostrarPagina(paginaActual);
+            //grdRangoResultados.CurrentCell = grdRangoResultados.Rows[filaSeleccionada].Cells[0];
         }
 
         private void grdRangoResultados_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -111,13 +111,14 @@ namespace Numeros_aleatorios.Colas
             tiempoFinCobro = int.Parse(txtTiempoPromedioFinCobro.Text);
 
          
-            colas = new ColasMunicipalidad(this);
+            gestor = new GestorSimulacion(this);
             if (hasta - desde <= 500) 
             { 
-                colas.simular(desde, hasta, cantSimulaciones, tiempoLlegada, tiempoFinInforme, tiempoFinActualizacion, tiempoFinCobro); // 0 es la fila 1, la 0 es inicializacion
-                //colas.mostrarPagina(paginaActual);
-                colas.calcularEstadisticas();
+                gestor.calcularPrimerasLlegadas(tiempoLlegada, tiempoFinInforme, tiempoFinActualizacion);
+                MessageBox.Show(gestor.getAlfa().ToString());
 
+                gestor.simular(desde, hasta, cantSimulaciones, tiempoLlegada, tiempoFinInforme, tiempoFinActualizacion); 
+                gestor.calcularEstadisticas();
             }
             else
             {
