@@ -32,8 +32,7 @@ namespace Numeros_aleatorios.Colas
        public string conoceProcedimiento { get; set; }
        public double rndFinCobro { get; set; }
        public double tiempoFinCobro { get; set; }
-        public double rndFinInforme { get; set; }
-        public double tiempoInforme { get; set; }
+        public double rndFinInforme { get; set;  }
         public List<Caja> cajas { get; set; }
        public VentanillaActualizacion ventanillaActualizacion { get; set; }
        public VentanillaInforme ventanillaInforme { get; set; }
@@ -72,8 +71,13 @@ namespace Numeros_aleatorios.Colas
             this.clientes = new List<Cliente>();
             this.colaCaja = 0;
             this.clientesLibre = new Queue<Cliente>();
+            this.rndFinInforme = -1;
+            this.rndFinCobro = -1;
             this.rndConoceProcedimiento = -1;
             this.rndEstadoFactura = -1;
+            this.tiempoFinInforme = -1;
+            this.tiempoParaLlegada = 60;
+            this.tiempoFinCobro = -1;
             this.exponencial = new GeneradorExponencialNegativa((GeneradorUniformeLenguaje)aleatorios, truncador, mediaFinInforme);
         }
 
@@ -103,12 +107,19 @@ namespace Numeros_aleatorios.Colas
             this.filaHasta = filaHasta;
             this.idFila = idFila;
 
+            this.rndFinInforme = -1;
+            this.rndFinCobro = -1;
+            this.rndConoceProcedimiento = -1;
+            this.rndEstadoFactura = -1;
+            this.tiempoFinInforme = -1;
+            this.tiempoFinCobro = -1;
+
             acumuladorTiemposEsperaEnCaja = anterior.acumuladorTiemposEsperaEnCaja;
             cantidadClientesEsperan = anterior.cantidadClientesEsperan;
             acumuladorTiempoOcupacionVentanillaInformes = anterior.acumuladorTiempoOcupacionVentanillaInformes;
             acumuladorTiempoOciosoVentanillaActualizacion = anterior.acumuladorTiempoOciosoVentanillaActualizacion;
             tiempoMaximoEsperaEnCola = anterior.tiempoMaximoEsperaEnCola;
-    }
+        }
 
 
         public VentanillaInforme obtenerVentanillaInforme()
@@ -125,12 +136,9 @@ namespace Numeros_aleatorios.Colas
         {
             calcularTiempoOcupacionInformes();
 
-            this.tiempoFinInforme = exponencial.siguienteAleatorio();
-            this.rndFinInforme = ((GeneradorExponencialNegativa)exponencial).getAleatorio();
-
-            calcularFinInformeEventoFinInforme(tiempoFinInforme);
-            calcularFinInformeEventoLlegadaCliente(tiempoFinInforme);
-            calcularFinInformeEventoFinActualizacion(tiempoFinInforme);
+            calcularFinInformeEventoFinInforme();
+            calcularFinInformeEventoLlegadaCliente();
+            calcularFinInformeEventoFinActualizacion();
         }
 
         public void calcularColumnaFinActualizacion(double tiempo)
@@ -235,15 +243,17 @@ namespace Numeros_aleatorios.Colas
 
         }
 
-        private void calcularFinInformeEventoFinInforme(double tiempo)
+        private void calcularFinInformeEventoFinInforme()
         {
 
             if (this.evento.Equals(FIN_INFORME))
             {
                 if (lineaAnterior.tieneColaInforme())
                 {
+                    this.tiempoFinInforme = exponencial.siguienteAleatorio();
+                    this.rndFinInforme = ((GeneradorExponencialNegativa)exponencial).getAleatorio();
                     Cliente clienteActual = ventanillaInforme.siguienteCliente();
-                    atenderInforme(clienteActual, tiempo);
+                    atenderInforme(clienteActual, tiempoFinInforme);
                 }
                 else
                 {
@@ -281,7 +291,7 @@ namespace Numeros_aleatorios.Colas
 
 
 
-        private void calcularFinInformeEventoFinActualizacion(double tiempo)
+        private void calcularFinInformeEventoFinActualizacion()
         {
             if (this.evento.Equals(FIN_ACTUALIZACION) && lineaAnterior.tieneFinInforme())
             {
@@ -353,7 +363,7 @@ namespace Numeros_aleatorios.Colas
             }
         }
 
-        private void calcularFinInformeEventoLlegadaCliente(double tiempo)
+        private void calcularFinInformeEventoLlegadaCliente()
         {
             if (this.conoceProcedimiento.Equals("no"))
             {
@@ -364,7 +374,9 @@ namespace Numeros_aleatorios.Colas
                 }
                 else
                 {
-                    atenderInforme(clienteActual, tiempo);
+                    this.tiempoFinInforme = exponencial.siguienteAleatorio();
+                    this.rndFinInforme = ((GeneradorExponencialNegativa)exponencial).getAleatorio();
+                    atenderInforme(clienteActual, tiempoFinInforme);
 
                 }
             }
