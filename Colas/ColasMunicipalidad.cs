@@ -196,12 +196,12 @@ namespace Numeros_aleatorios.Colas
             row[6] = linea.estadoFactura;
             row[7] = linea.rndConoceProcedimiento.ToString() != "-1" ? linea.rndConoceProcedimiento.ToString() : "";
             row[8] = linea.conoceProcedimiento;
-            row[9] = linea.rndFinInforme;
-            row[10] = linea.tiempoFinInforme;
+            row[9] = linea.rndFinInforme.ToString() != "-1"? linea.rndFinInforme.ToString(): "";
+            row[10] = linea.tiempoFinInforme.ToString() != "-1" ? linea.tiempoFinInforme.ToString() : "";
             row[11] = linea.ventanillaInforme.finInforme.ToString() != "-1" ? linea.ventanillaInforme.finInforme.ToString() : "";
             row[12] = linea.ventanillaActualizacion.finActualizacion.ToString() != "-1" ? linea.ventanillaActualizacion.finActualizacion.ToString() : "";
-            row[13] = linea.rndFinCobro;
-            row[14] = linea.tiempoFinCobro;
+            row[13] = linea.rndFinCobro.ToString() != "-1" ? linea.rndFinCobro.ToString( ): "";
+            row[14] = linea.tiempoFinCobro.ToString() != "-1"? linea.tiempoFinCobro.ToString() : "";
             row[15] = linea.cajas[0].finCobro.ToString() != "-1" ? linea.cajas[0].finCobro.ToString() : "" ;
             row[16] = linea.cajas[1].finCobro.ToString() != "-1" ? linea.cajas[1].finCobro.ToString() : "";
             row[17] = linea.cajas[2].finCobro.ToString() != "-1" ? linea.cajas[2].finCobro.ToString() : "";

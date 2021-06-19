@@ -25,6 +25,7 @@ namespace Numeros_aleatorios.Colas
             this.estado = LIBRE;
             this.id = id;
             cola = new Queue<Cliente>();
+            this.finCobro = -1;
         }
 
         public Boolean estaLibre()
