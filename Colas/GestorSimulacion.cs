@@ -12,7 +12,8 @@ namespace Numeros_aleatorios.Colas
         ColasMunicipalidad simulacion;
         ColasMunicipalidad simulacionLlegadas;
         private double alfa;
-        private double relojPrimerasLlegadas;
+        private double reloj100;
+
 
         public GestorSimulacion(PantallaResultados pantalla)
         {
@@ -21,21 +22,31 @@ namespace Numeros_aleatorios.Colas
 
         public void simular(int filaDesde, int filaHasta, int cantSimulaciones, int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion)
         {
+            calcularPrimerasLlegadas(TiempoLlegada, TiempoFinInforme, TiempoFinActualizacion);
+            ejecutar(filaDesde, filaHasta, cantSimulaciones, TiempoLlegada, TiempoFinInforme, TiempoFinActualizacion);
+            calcularEstadisticas();
+        }
 
-
+        private void ejecutar(int filaDesde, int filaHasta, int cantSimulaciones, int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion)
+        {
             simulacion = new ColasMunicipalidad();
             simulacion.simular(filaDesde, filaHasta, cantSimulaciones, TiempoLlegada, TiempoFinInforme, TiempoFinActualizacion, 0); // cambiar 0 por los parametros de la unfiorme del cobro
             pantalla.mostrarResultados(simulacion.getResultados());
         }
 
-        public void calcularPrimerasLlegadas(int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion)
+        private void calcularPrimerasLlegadas(int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion)
         {
             PantallaLlegadas pantallaLlegadas = new PantallaLlegadas();
             simulacionLlegadas= new ColasMunicipalidad();
             simulacionLlegadas.calcularPrimerasLlegadas(TiempoLlegada, TiempoFinInforme, TiempoFinActualizacion);
             pantallaLlegadas.mostrarResultados(simulacionLlegadas.getResultados());
-            this.relojPrimerasLlegadas = simulacionLlegadas.getReloj();
-            this.alfa = Math.Log(100 / 5) / relojPrimerasLlegadas;
+            calcularAlfa();
+        }
+
+        private void calcularAlfa()
+        {
+            this.reloj100 = simulacionLlegadas.getReloj();
+            this.alfa = Math.Log(100 / 5) / reloj100;
         }
 
         public double getAlfa()
@@ -43,7 +54,7 @@ namespace Numeros_aleatorios.Colas
             return alfa;
         }
 
-        public void calcularEstadisticas()
+        private void calcularEstadisticas()
         {
             simulacion.calcularEstadisticas(this);
         }

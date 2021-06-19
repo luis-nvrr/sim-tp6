@@ -113,12 +113,9 @@ namespace Numeros_aleatorios.Colas
          
             gestor = new GestorSimulacion(this);
             if (hasta - desde <= 500) 
-            { 
-                gestor.calcularPrimerasLlegadas(tiempoLlegada, tiempoFinInforme, tiempoFinActualizacion);
+            {
+                gestor.simular(desde, hasta, cantSimulaciones, tiempoLlegada, tiempoFinInforme, tiempoFinActualizacion);
                 MessageBox.Show(gestor.getAlfa().ToString());
-
-                gestor.simular(desde, hasta, cantSimulaciones, tiempoLlegada, tiempoFinInforme, tiempoFinActualizacion); 
-                gestor.calcularEstadisticas();
             }
             else
             {
