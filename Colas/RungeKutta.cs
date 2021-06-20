@@ -74,6 +74,11 @@ namespace Numeros_aleatorios.Colas
 
 			return to;
 		}
+
+		public decimal getTi() 
+		{
+			return ti; 
+		}
 	}
 
 }

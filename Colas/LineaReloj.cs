@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Numeros_aleatorios.Colas
 {
-    class Linea
+    class LineaReloj
     {
         public string LLEGADA_PERSONA = "llegada de persona";
         public string FIN_INFORME = "fin de informe";
@@ -36,7 +36,7 @@ namespace Numeros_aleatorios.Colas
         public List<Caja> cajas { get; set; }
        public VentanillaActualizacion ventanillaActualizacion { get; set; }
        public VentanillaInforme ventanillaInforme { get; set; }
-       public Linea lineaAnterior { get; set; }
+       public LineaReloj LineaRelojAnterior { get; set; }
 
         public Caja cajaFinCobro;
 
@@ -44,7 +44,7 @@ namespace Numeros_aleatorios.Colas
 
         public List<Cliente> clientes;
 
-        public Simulacion colas;
+        public SimulacionReloj colas;
         public Queue<Cliente> clientesLibre;
 
         public double acumuladorTiemposEsperaEnCaja;
@@ -63,8 +63,7 @@ namespace Numeros_aleatorios.Colas
         private double reloj70;
         private double reloj100;
 
-        public Linea(int cantidadCajas, int mediaLLegada, int mediaFinInforme, double a, double b,
-            double reloj50, double reloj70, double reloj100)
+        public LineaReloj(int cantidadCajas, int mediaLLegada, int mediaFinInforme, double a, double b)
         {
             this.llegadaCliente = mediaLLegada;
             this.truncador = new Truncador(4);
@@ -92,9 +91,9 @@ namespace Numeros_aleatorios.Colas
             this.reloj100 = reloj100;
         }
 
-        public Linea(Linea anterior, Simulacion colas, int filaDesde, int filaHasta, int idFila)
+        public LineaReloj(LineaReloj anterior, SimulacionReloj colas, int filaDesde, int filaHasta, int idFila)
         {
-            this.lineaAnterior = anterior;
+            this.LineaRelojAnterior = anterior;
             this.truncador = anterior.truncador;
             this.aleatorios = anterior.aleatorios;
             this.poisson = anterior.poisson;
@@ -177,22 +176,22 @@ namespace Numeros_aleatorios.Colas
         public void calcularEvento()
         {
 
-            this.reloj = lineaAnterior.llegadaCliente;
+            this.reloj = LineaRelojAnterior.llegadaCliente;
             this.evento = LLEGADA_PERSONA;
             cajaFinCobro = null;
 
-            if (lineaAnterior.ventanillaInforme.finInforme >0 && lineaAnterior.ventanillaInforme.finInforme < reloj) {
-                reloj = lineaAnterior.ventanillaInforme.finInforme;
+            if (LineaRelojAnterior.ventanillaInforme.finInforme >0 && LineaRelojAnterior.ventanillaInforme.finInforme < reloj) {
+                reloj = LineaRelojAnterior.ventanillaInforme.finInforme;
                 evento = FIN_INFORME;
             }
 
-            if (lineaAnterior.ventanillaActualizacion.finActualizacion > 0 && lineaAnterior.ventanillaActualizacion.finActualizacion < reloj)
+            if (LineaRelojAnterior.ventanillaActualizacion.finActualizacion > 0 && LineaRelojAnterior.ventanillaActualizacion.finActualizacion < reloj)
             {
-                reloj = lineaAnterior.ventanillaActualizacion.finActualizacion;
+                reloj = LineaRelojAnterior.ventanillaActualizacion.finActualizacion;
                 evento = FIN_ACTUALIZACION;
             }
 
-            foreach (var caja in lineaAnterior.cajas)
+            foreach (var caja in LineaRelojAnterior.cajas)
             {
                 if (caja.finCobro < reloj && caja.finCobro > 0) {
                     reloj = caja.finCobro;
@@ -217,7 +216,7 @@ namespace Numeros_aleatorios.Colas
                 this.llegadaCliente = reloj + tiempoParaLlegada;
                 return;
             }
-            this.llegadaCliente = lineaAnterior.llegadaCliente;
+            this.llegadaCliente = LineaRelojAnterior.llegadaCliente;
         }
 
         public void calcularEstadoFactura(double[] probabilidades, string[] estadosFactura)
@@ -259,9 +258,9 @@ namespace Numeros_aleatorios.Colas
 
         private void calcularTiempoOcupacionInformes()
         {
-            if (lineaAnterior.ventanillaInforme.estaOcupada())
+            if (LineaRelojAnterior.ventanillaInforme.estaOcupada())
             {
-                this.acumuladorTiempoOcupacionVentanillaInformes += (reloj - lineaAnterior.reloj);
+                this.acumuladorTiempoOcupacionVentanillaInformes += (reloj - LineaRelojAnterior.reloj);
             }
 
         }
@@ -271,7 +270,7 @@ namespace Numeros_aleatorios.Colas
 
             if (this.evento.Equals(FIN_INFORME))
             {
-                if (lineaAnterior.tieneColaInforme())
+                if (LineaRelojAnterior.tieneColaInforme())
                 {
                     this.tiempoFinInforme = exponencial.siguienteAleatorio();
                     this.rndFinInforme = ((GeneradorExponencialNegativa)exponencial).getAleatorio();
@@ -287,13 +286,13 @@ namespace Numeros_aleatorios.Colas
 
         private void esperarInforme(Cliente clienteActual)
         {
-            ventanillaInforme.agregarFinInforme(lineaAnterior.obtenerFinInforme());
+            ventanillaInforme.agregarFinInforme(LineaRelojAnterior.obtenerFinInforme());
             ventanillaInforme.agregarACola(clienteActual);
             clienteActual.esperarInforme();
         }
         private void esperarActualizacion(Cliente clienteActual)
         {
-            ventanillaActualizacion.agregarFinActualizacion(lineaAnterior.obtenerFinActualizacion());
+            ventanillaActualizacion.agregarFinActualizacion(LineaRelojAnterior.obtenerFinActualizacion());
             ventanillaActualizacion.agregarACola(clienteActual);
             clienteActual.esperarActualizacion();
         }
@@ -316,9 +315,9 @@ namespace Numeros_aleatorios.Colas
 
         private void calcularFinInformeEventoFinActualizacion()
         {
-            if (this.evento.Equals(FIN_ACTUALIZACION) && lineaAnterior.tieneFinInforme())
+            if (this.evento.Equals(FIN_ACTUALIZACION) && LineaRelojAnterior.tieneFinInforme())
             {
-                ventanillaInforme.agregarFinInforme(lineaAnterior.obtenerFinInforme());
+                ventanillaInforme.agregarFinInforme(LineaRelojAnterior.obtenerFinInforme());
             }
         }
 
@@ -363,9 +362,9 @@ namespace Numeros_aleatorios.Colas
 
         private void sumarTiempoOciosoActualizacion()
         {
-            if (!lineaAnterior.ventanillaActualizacion.estaOcupada())
+            if (!LineaRelojAnterior.ventanillaActualizacion.estaOcupada())
             {
-                this.acumuladorTiempoOciosoVentanillaActualizacion += (reloj - lineaAnterior.reloj);
+                this.acumuladorTiempoOciosoVentanillaActualizacion += (reloj - LineaRelojAnterior.reloj);
             }
         }
 
@@ -374,7 +373,7 @@ namespace Numeros_aleatorios.Colas
             if ((this.conoceProcedimiento.Equals("si")))
             {
                 Cliente clienteActual = buscarClienteLibre();
-                if (lineaAnterior.tieneVentanillaActualizacionOcupada())
+                if (LineaRelojAnterior.tieneVentanillaActualizacionOcupada())
                 {
                     esperarActualizacion(clienteActual);
                 }
@@ -391,7 +390,7 @@ namespace Numeros_aleatorios.Colas
             if (this.conoceProcedimiento.Equals("no"))
             {
                 Cliente clienteActual = buscarClienteLibre();
-                if (lineaAnterior.tieneVentanillaInformeOcupada())
+                if (LineaRelojAnterior.tieneVentanillaInformeOcupada())
                 {
                     esperarInforme(clienteActual);
                 }
@@ -409,9 +408,9 @@ namespace Numeros_aleatorios.Colas
         {
             if (this.evento.Equals(FIN_INFORME))
             {
-                Cliente clienteActual = lineaAnterior.ventanillaInforme.getClienteActual();
+                Cliente clienteActual = LineaRelojAnterior.ventanillaInforme.getClienteActual();
 
-                if (lineaAnterior.tieneVentanillaActualizacionOcupada())
+                if (LineaRelojAnterior.tieneVentanillaActualizacionOcupada())
                 {
                     esperarActualizacion(clienteActual);
                 }
@@ -426,7 +425,7 @@ namespace Numeros_aleatorios.Colas
         {
             if (this.evento.Equals(FIN_ACTUALIZACION))
             {
-                if (this.lineaAnterior.tieneColaActualizacion())
+                if (this.LineaRelojAnterior.tieneColaActualizacion())
                 {
                     Cliente clienteActual = ventanillaActualizacion.siguienteCliente();
                     atenderActualizacion(clienteActual, tiempo);
@@ -494,7 +493,7 @@ namespace Numeros_aleatorios.Colas
                 clientesLibre.Enqueue(clienteViejo);
                 cajaFinCobro.liberar();
 
-                if (lineaAnterior.tieneColaCobro())
+                if (LineaRelojAnterior.tieneColaCobro())
                 {
                     Cliente clienteActual = Caja.siguienteCliente();
                     colaCaja--;
@@ -529,7 +528,7 @@ namespace Numeros_aleatorios.Colas
             {
                 this.rndFinCobro = ((GeneradorUniformeAB)uniforme).getAleatorio();
                 this.tiempoFinCobro = uniforme.siguienteAleatorio();
-                Cliente clienteActual = lineaAnterior.ventanillaActualizacion.getClienteActual();
+                Cliente clienteActual = LineaRelojAnterior.ventanillaActualizacion.getClienteActual();
                 Caja cajaLibre = buscarCajaLibre();
 
                 if (cajaLibre == null)

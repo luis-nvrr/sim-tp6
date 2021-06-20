@@ -9,10 +9,12 @@ namespace Numeros_aleatorios.Colas
     class GestorSimulacion
     {
         PantallaResultados pantalla;
-        ColasMunicipalidad simulacion;
-        ColasMunicipalidad simulacionLlegadas;
-        private double alfa;
+        Simulacion simulacion;
+        SimulacionReloj simulacionLlegadas;
+        private decimal alfa;
         private double reloj100;
+        private double reloj50;
+        private double reloj70;
 
 
         public GestorSimulacion(PantallaResultados pantalla)
@@ -23,21 +25,40 @@ namespace Numeros_aleatorios.Colas
         public void simular(int filaDesde, int filaHasta, int cantSimulaciones, int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion)
         {
             calcularPrimerasLlegadas(TiempoLlegada, TiempoFinInforme, TiempoFinActualizacion);
-            ejecutar(filaDesde, filaHasta, cantSimulaciones, TiempoLlegada, TiempoFinInforme, TiempoFinActualizacion);
+            calcularTiempos();
+            ejecutar(filaDesde, filaHasta, cantSimulaciones, TiempoLlegada, TiempoFinInforme, TiempoFinActualizacion, reloj50, reloj70, reloj100) ;
             calcularEstadisticas();
         }
 
-        private void ejecutar(int filaDesde, int filaHasta, int cantSimulaciones, int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion)
+        private void calcularTiempos()
         {
-            simulacion = new ColasMunicipalidad();
-            simulacion.simular(filaDesde, filaHasta, cantSimulaciones, TiempoLlegada, TiempoFinInforme, TiempoFinActualizacion, 0); // cambiar 0 por los parametros de la unfiorme del cobro
+            RungeKutta rungeKutta = new RungeKutta((decimal)0.01, alfa, 50);
+            reloj50 = (double)rungeKutta.calcularRungeKutta();
+
+            RungeKuttaResultados rungeKutta50 = new RungeKuttaResultados();
+            rungeKutta50.mostrarResultados(rungeKutta.tabla);
+
+            rungeKutta = new RungeKutta((decimal)0.01, alfa, 70);
+            reloj70 = (double)rungeKutta.calcularRungeKutta();
+
+            RungeKuttaResultados rungeKutta70 = new RungeKuttaResultados();
+            rungeKutta70.mostrarResultados(rungeKutta.tabla);
+        }
+
+        private void ejecutar(int filaDesde, int filaHasta, int cantSimulaciones, 
+            int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion,
+            double reloj50, double  reloj70, double reloj100)
+        {
+            simulacion = new Simulacion();
+            simulacion.simular(filaDesde, filaHasta, cantSimulaciones, TiempoLlegada, 
+                TiempoFinInforme, TiempoFinActualizacion, 0, reloj50, reloj70, reloj100); // cambiar 0 por los parametros de la unfiorme del cobro
             pantalla.mostrarResultados(simulacion.getResultados());
         }
 
         private void calcularPrimerasLlegadas(int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion)
         {
             PantallaLlegadas pantallaLlegadas = new PantallaLlegadas();
-            simulacionLlegadas= new ColasMunicipalidad();
+            simulacionLlegadas= new SimulacionReloj();
             simulacionLlegadas.calcularPrimerasLlegadas(TiempoLlegada, TiempoFinInforme, TiempoFinActualizacion);
             pantallaLlegadas.mostrarResultados(simulacionLlegadas.getResultados());
             calcularAlfa();
@@ -46,10 +67,10 @@ namespace Numeros_aleatorios.Colas
         private void calcularAlfa()
         {
             this.reloj100 = simulacionLlegadas.getReloj();
-            this.alfa = Math.Log(100 / 5) / reloj100;
+            this.alfa = (decimal)(Math.Log(100 / 5) / reloj100);
         }
 
-        public double getAlfa()
+        public decimal getAlfa()
         {
             return alfa;
         }

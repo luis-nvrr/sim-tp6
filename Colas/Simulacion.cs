@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Numeros_aleatorios.Colas
 {
-    class ColasMunicipalidad
+    class Simulacion
     {
         double[] probabilidadesEstadosAcum = new double[] { 0.4, 1 };
         string[] estadosFactura = new string[] { "vencida", "al dia" };
@@ -25,7 +25,7 @@ namespace Numeros_aleatorios.Colas
         private Linea lineaActual;
 
 
-        public ColasMunicipalidad()
+        public Simulacion()
         {
             resultados = new DataTable();
             crearTabla(resultados);
@@ -44,6 +44,9 @@ namespace Numeros_aleatorios.Colas
             tabla.Columns.Add("estado factura");
             tabla.Columns.Add("RND conoce");
             tabla.Columns.Add("conoce procedimiento");
+            tabla.Columns.Add("RND inestable");
+            tabla.Columns.Add("tiempo para inestabilidad");
+            tabla.Columns.Add("fin de inestable"); 
             tabla.Columns.Add("RND fin de informe");
             tabla.Columns.Add("tiempo de informe");
             tabla.Columns.Add("fin informacion");
@@ -73,9 +76,11 @@ namespace Numeros_aleatorios.Colas
         }
 
 
-        public void simular(int filaDesde, int filaHasta, int cantSimulaciones, int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion, int TiempoFinCobro)
+        public void simular(int filaDesde, int filaHasta, int cantSimulaciones, 
+            int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion, int TiempoFinCobro, 
+            double reloj50, double reloj70, double reloj100 )
         {
-            Linea lineaAnterior = new Linea(5,TiempoLlegada, TiempoFinInforme,20, 50);
+            Linea lineaAnterior = new Linea(5,TiempoLlegada, TiempoFinInforme,20, 50, reloj50, reloj70, reloj100);
             int i;
 
             agregarLinea(lineaAnterior, 0);
@@ -107,28 +112,28 @@ namespace Numeros_aleatorios.Colas
         }
 
 
-        public void calcularPrimerasLlegadas(int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion)
-        {
-            Linea lineaAnterior = new Linea(5, TiempoLlegada, TiempoFinInforme, 20, 50);
+        //public void calcularPrimerasLlegadas(int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion)
+        //{
+        //    Linea lineaAnterior = new Linea(5, TiempoLlegada, TiempoFinInforme, 20, 50);
 
-            agregarLinea(lineaAnterior, 0);
-            int i = 0;
-            do
-            {
-                lineaActual = new Linea(lineaAnterior, this, 0, 100000000, i);
-                lineaActual.calcularEvento();
-                lineaActual.calcularSiguienteLlegada();
-                lineaActual.calcularEstadoFactura(probabilidadesEstadosAcum, estadosFactura);
-                lineaActual.calcularConoceProcedimiento(probabilidadesConoceProcedimientoAcum, conoceProcedimiento);
-                lineaActual.calcularFinInforme();
-                lineaActual.calcularColumnaFinActualizacion(TiempoFinActualizacion);
-                lineaActual.calcularFinCobro();
-                lineaAnterior = lineaActual;
-                agregarLinea(lineaActual, i);
-                i++;
-            }
-            while (!lineaActual.tieneLlegadasCumplidas());
-        }
+        //    agregarLinea(lineaAnterior, 0);
+        //    int i = 0;
+        //    do
+        //    {
+        //        lineaActual = new Linea(lineaAnterior, this, 0, 100000000, i);
+        //        lineaActual.calcularEvento();
+        //        lineaActual.calcularSiguienteLlegada();
+        //        lineaActual.calcularEstadoFactura(probabilidadesEstadosAcum, estadosFactura);
+        //        lineaActual.calcularConoceProcedimiento(probabilidadesConoceProcedimientoAcum, conoceProcedimiento);
+        //        lineaActual.calcularFinInforme();
+        //        lineaActual.calcularColumnaFinActualizacion(TiempoFinActualizacion);
+        //        lineaActual.calcularFinCobro();
+        //        lineaAnterior = lineaActual;
+        //        agregarLinea(lineaActual, i);
+        //        i++;
+        //    }
+        //    while (!lineaActual.tieneLlegadasCumplidas());
+        //}
 
         //private void construirPaginas()
         //{
