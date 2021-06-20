@@ -115,7 +115,6 @@ namespace Numeros_aleatorios.Colas
             if (hasta - desde <= 500) 
             {
                 gestor.simular(desde, hasta, cantSimulaciones, tiempoLlegada, tiempoFinInforme, tiempoFinActualizacion);
-                MessageBox.Show(gestor.getAlfa().ToString());
             }
             else
             {

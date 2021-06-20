@@ -10,9 +10,12 @@ namespace Numeros_aleatorios.Colas
     {
         string LIBRE = "libre";
         string OCUPADO = "ocupado";
+        string PURGANDO = "purgando";
 
         public string estado { get; set; }
         public double finInforme { get; set; }
+
+        public double tiempoRestanteAtencion;
 
         public Queue<Cliente> cola;
 
@@ -22,6 +25,7 @@ namespace Numeros_aleatorios.Colas
         {
             this.estado = LIBRE;
             this.finInforme = -1;
+            this.tiempoRestanteAtencion = -1;
             this.cola = new Queue<Cliente>();
         }
 
@@ -29,6 +33,7 @@ namespace Numeros_aleatorios.Colas
         {
             this.estado = OCUPADO;
             finInforme = fin;
+            this.tiempoRestanteAtencion = -1;
 
             return;
         }
@@ -37,6 +42,11 @@ namespace Numeros_aleatorios.Colas
         public Boolean estaOcupada()
         {
             return this.estado.Equals(OCUPADO);
+        }
+
+        public Boolean estaPurgando()
+        {
+            return this.estado.Equals(PURGANDO);
         }
 
         public Boolean tieneCola()
@@ -53,6 +63,7 @@ namespace Numeros_aleatorios.Colas
         {
             this.estado = LIBRE;
             this.finInforme = -1;
+            this.tiempoRestanteAtencion = -1;
         }
 
         public object Clone()
@@ -64,6 +75,7 @@ namespace Numeros_aleatorios.Colas
             Cliente[] temp = new Cliente[cola.Count];
             cola.CopyTo(temp, 0);
             res.cola = new Queue<Cliente>(temp);
+            res.tiempoRestanteAtencion = this.tiempoRestanteAtencion;
 
             return res;
         }
@@ -81,6 +93,22 @@ namespace Numeros_aleatorios.Colas
         public void agregarACola(Cliente cliente)
         {
             cola.Enqueue(cliente);
+        }
+
+        public void inestabilizar()
+        {
+            this.estado = PURGANDO;
+            this.finInforme = -1; 
+        }
+
+        public void suspenderCliente()
+        {
+            this.clienteActual.suspender();
+        }
+
+        public Boolean tieneTiempoRestante()
+        {
+            return this.tiempoRestanteAtencion > 0;
         }
     }
 }

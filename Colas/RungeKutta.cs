@@ -23,13 +23,9 @@ namespace Numeros_aleatorios.Colas
 		public decimal ti;
 		public decimal ei;
 
-		public RungeKutta(decimal h, decimal a, decimal limite)
+		public RungeKutta()
 		{
-			this.limite = limite;
-			this.h = h;
-			this.to = 0;
-			this.eo = 15;
-			this.a = a;
+
 		}
 
 		public void crearTabla()
@@ -45,8 +41,14 @@ namespace Numeros_aleatorios.Colas
 			tabla.Columns.Add("ei+1");
         }
 
-		public decimal calcularRungeKutta()
+		public decimal calcularRungeKuttaTiemposInestable(decimal h, decimal a, decimal limite)
 		{
+			this.limite = limite;
+			this.h = h;
+			this.to = 0;
+			this.eo = 15;
+			this.a = a;
+
 			crearTabla();
 			DataRow row;
 			do
@@ -74,6 +76,47 @@ namespace Numeros_aleatorios.Colas
 
 			return to;
 		}
+
+
+		public decimal calcularRungeKuttaTiemposPurga(decimal h, decimal b, int cantidadPersonas)
+		{
+			this.h = h;
+			this.to = 0;
+			this.eo = cantidadPersonas;
+			this.a = b;
+
+			crearTabla();
+			DataRow row;
+			do
+			{
+				row = tabla.NewRow();
+				row[0] = to;
+				row[1] = eo;
+				k1 = h * (-a * eo * (decimal)0.5);
+				row[2] = k1;
+				k2 = h * (-a * (eo + (k1 / 2)) * (decimal)0.5);
+				row[3] = k2;
+				k3 = h * (-a * (eo + (k2 / 2)) * (decimal)0.5);
+				row[4] = k3;
+				k4 = h * (-a * (eo + k3) * (decimal)0.5);
+				row[5] = k4;
+				ti = to + h;
+				row[6] = ti;
+				ei = eo + ((decimal)(1.0 / 6.0)) * (k1 + 2 * k2 + 2 * k3 + k4);
+				row[7] = ei;
+				to = ti;
+				tabla.Rows.Add(row);
+
+				if ((eo - ei) < (decimal)0.02){
+					break;
+                }
+
+				eo = ei;
+			}
+			while (true);
+			return to;
+		}
+
 
 		public decimal getTi() 
 		{

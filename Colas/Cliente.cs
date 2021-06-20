@@ -14,6 +14,7 @@ namespace Numeros_aleatorios.Colas
         String SIENDO_ATENDIDO_CAJA = "SAC";
         String SIENDO_ATENDID_ACTUALIZACION = "SAA";
         String SIENDO_ATENDIDO_INFORME = "SAI";
+        String CON_ATENCION_SUSPENDIDA_INFORME = "ASI";
 
         public String estado;
         public double horaLLegadaACaja;
@@ -73,6 +74,11 @@ namespace Numeros_aleatorios.Colas
         public void esperarCaja()
         {
             this.estado = ESPERANDO_CAJA;
+        }
+
+        public void suspender()
+        {
+            this.estado = CON_ATENCION_SUSPENDIDA_INFORME;
         }
     }
 }

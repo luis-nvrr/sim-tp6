@@ -32,14 +32,14 @@ namespace Numeros_aleatorios.Colas
 
         private void calcularTiempos()
         {
-            RungeKutta rungeKutta = new RungeKutta((decimal)0.01, alfa, 50);
-            reloj50 = (double)rungeKutta.calcularRungeKutta();
+            RungeKutta rungeKutta = new RungeKutta();
+            reloj50 = (double)rungeKutta.calcularRungeKuttaTiemposInestable((decimal)0.01, alfa, 50);
 
             RungeKuttaResultados rungeKutta50 = new RungeKuttaResultados();
             rungeKutta50.mostrarResultados(rungeKutta.tabla);
 
-            rungeKutta = new RungeKutta((decimal)0.01, alfa, 70);
-            reloj70 = (double)rungeKutta.calcularRungeKutta();
+            rungeKutta = new RungeKutta();
+            reloj70 = (double)rungeKutta.calcularRungeKuttaTiemposInestable((decimal)0.01, alfa, 70); ;
 
             RungeKuttaResultados rungeKutta70 = new RungeKuttaResultados();
             rungeKutta70.mostrarResultados(rungeKutta.tabla);
@@ -49,7 +49,7 @@ namespace Numeros_aleatorios.Colas
             int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion,
             double reloj50, double  reloj70, double reloj100)
         {
-            simulacion = new Simulacion();
+            simulacion = new Simulacion(alfa);
             simulacion.simular(filaDesde, filaHasta, cantSimulaciones, TiempoLlegada, 
                 TiempoFinInforme, TiempoFinActualizacion, 0, reloj50, reloj70, reloj100); // cambiar 0 por los parametros de la unfiorme del cobro
             pantalla.mostrarResultados(simulacion.getResultados());

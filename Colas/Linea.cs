@@ -15,6 +15,9 @@ namespace Numeros_aleatorios.Colas
         public string FIN_INFORME = "fin de informe";
         public string FIN_ACTUALIZACION = "fin de actualizacion";
         public string FIN_COBRO = "fin de cobro";
+        public string INICIALIZACION = "inicializacion";
+        public string FIN_PURGA = "fin purga";
+        public string INESTABLE = "inestable";
 
        public IGenerador aleatorios;
        public Truncador truncador;
@@ -59,12 +62,13 @@ namespace Numeros_aleatorios.Colas
 
         public int contadorLlegadas;
 
-        private double reloj50;
-        private double reloj70;
-        private double reloj100;
+        public double rndInestable;
+        public double tiempoInestable;
+        public double finInestable;
+        public double tiempoPurga;
+        public double finPurga;
 
-        public Linea(int cantidadCajas, int mediaLLegada, int mediaFinInforme, double a, double b,
-            double reloj50, double reloj70, double reloj100)
+        public Linea(int cantidadCajas, int mediaLLegada, double mediaFinInforme, double a, double b)
         {
             this.llegadaCliente = mediaLLegada;
             this.truncador = new Truncador(4);
@@ -87,9 +91,12 @@ namespace Numeros_aleatorios.Colas
             this.tiempoFinCobro = -1;
             this.exponencial = new GeneradorExponencialNegativa((GeneradorUniformeLenguaje)aleatorios, truncador, mediaFinInforme);
 
-            this.reloj50 = reloj50;
-            this.reloj70 = reloj70;
-            this.reloj100 = reloj100;
+            rndInestable = -1;
+            tiempoInestable = -1;
+            finInestable = -1;
+            tiempoPurga = -1;
+            finPurga = -1;
+            this.evento = INICIALIZACION;
         }
 
         public Linea(Linea anterior, Simulacion colas, int filaDesde, int filaHasta, int idFila)
@@ -132,9 +139,11 @@ namespace Numeros_aleatorios.Colas
             tiempoMaximoEsperaEnCola = anterior.tiempoMaximoEsperaEnCola;
             contadorLlegadas = anterior.contadorLlegadas;
 
-            this.reloj50 = anterior.reloj50;
-            this.reloj70 = anterior.reloj70;
-            this.reloj100 = anterior.reloj100;
+            rndInestable = -1;
+            tiempoInestable = -1;
+            finInestable = -1;
+            tiempoPurga = -1;
+            finPurga = -1;
         }
 
 
@@ -148,14 +157,28 @@ namespace Numeros_aleatorios.Colas
             return (VentanillaActualizacion) this.ventanillaActualizacion.Clone();
         }
 
-        public void calcularFinInforme()
+        public void calcularFinInestable(double[] probabilidades, double[] tiempos)
         {
-            calcularTiempoOcupacionInformes();
+            this.rndInestable = -1;
+            if (this.evento.Equals(INICIALIZACION) || this.evento.Equals(FIN_PURGA))
+            {
+                rndInestable = aleatorios.siguienteAleatorio();
+                this.tiempoInestable = buscarProbabilidadEnVector(probabilidades, tiempos, rndInestable);
+                this.finInestable = this.reloj + this.tiempoInestable;
+                return;
+            }
 
-            calcularFinInformeEventoFinInforme();
-            calcularFinInformeEventoLlegadaCliente();
-            calcularFinInformeEventoFinActualizacion();
+            if (this.evento.Equals(INESTABLE))
+            {
+                this.finInestable = -1;
+            }
+            else
+            {
+                this.finInestable = lineaAnterior.finInestable;
+            }
         }
+
+
 
         public void calcularColumnaFinActualizacion(double tiempo)
         {
@@ -201,6 +224,18 @@ namespace Numeros_aleatorios.Colas
                 }
             }
 
+            if(lineaAnterior.finInestable > 0 && lineaAnterior.finInestable < reloj)
+            {
+                reloj = lineaAnterior.finInestable;
+                evento = INESTABLE;
+            }
+
+            if (lineaAnterior.finPurga > 0 && lineaAnterior.finPurga < reloj)
+            {
+                reloj = lineaAnterior.finPurga;
+                evento = FIN_PURGA;
+            }
+
             if (this.evento.Equals(LLEGADA_PERSONA)) { contadorLlegadas++; }
         }
 
@@ -219,6 +254,8 @@ namespace Numeros_aleatorios.Colas
             }
             this.llegadaCliente = lineaAnterior.llegadaCliente;
         }
+
+
 
         public void calcularEstadoFactura(double[] probabilidades, string[] estadosFactura)
         {
@@ -257,6 +294,19 @@ namespace Numeros_aleatorios.Colas
             return "";
         }
 
+        private double buscarProbabilidadEnVector(double[] probAcum, double[] vector, double random)
+        {
+
+            for (int i = 0; i < probAcum.Length; i++)
+            {
+                if (random < probAcum[i])
+                {
+                    return vector[i];
+                }
+            }
+            return -1;
+        }
+
         private void calcularTiempoOcupacionInformes()
         {
             if (lineaAnterior.ventanillaInforme.estaOcupada())
@@ -264,6 +314,78 @@ namespace Numeros_aleatorios.Colas
                 this.acumuladorTiempoOcupacionVentanillaInformes += (reloj - lineaAnterior.reloj);
             }
 
+        }
+
+        public void calcularFinPurga(decimal alfa)
+        {
+            if (this.evento.Equals(INESTABLE))
+            {
+                RungeKutta runge = new RungeKutta();
+                runge.calcularRungeKuttaTiemposPurga(1,alfa,contadorLlegadas);
+
+                contadorLlegadas = 0;
+                this.tiempoPurga = (double)runge.getTi();
+                this.finPurga = this.reloj + tiempoPurga;
+
+                return;
+            }
+
+            if (this.evento.Equals(FIN_PURGA))
+            {
+                this.finPurga = -1;
+            }
+            else
+            {
+                this.finPurga = lineaAnterior.finPurga;
+            }
+        }
+
+        public void calcularFinInforme()
+        {
+            calcularTiempoOcupacionInformes();
+
+            calcularFinInformeEventoFinInforme();
+            calcularFinInformeEventoLlegadaCliente();
+            calcularFinInformeEventoFinActualizacion();
+            calcularFinInformeEventoInestable();
+            calcularFinInformeEventoFinPurga();
+        }
+
+        private void calcularFinInformeEventoInestable()
+        {
+            if (this.evento.Equals(INESTABLE))
+            {
+                this.ventanillaInforme.inestabilizar();
+                if (lineaAnterior.tieneVentanillaInformeOcupada())
+                {
+                    this.ventanillaInforme.tiempoRestanteAtencion = lineaAnterior.ventanillaInforme.finInforme - reloj;
+                    this.ventanillaInforme.suspenderCliente();
+                }
+            }
+            return;
+        }
+
+        private void calcularFinInformeEventoFinPurga()
+        {
+            if (this.evento.Equals(FIN_PURGA))
+            {
+                if (this.ventanillaInforme.tieneTiempoRestante())
+                {
+                    atenderInforme(ventanillaInforme.clienteActual, ventanillaInforme.tiempoRestanteAtencion);
+                    return;
+                }
+                if (this.ventanillaInforme.tieneCola())
+                {
+                    Cliente clienteCola = ventanillaInforme.siguienteCliente();
+                    this.tiempoFinInforme = exponencial.siguienteAleatorio();
+                    this.rndFinInforme = ((GeneradorExponencialNegativa)exponencial).getAleatorio();
+                    atenderInforme(clienteCola, tiempoFinInforme);
+                }
+                else
+                {
+                    ventanillaInforme.liberar();
+                }
+            }
         }
 
         private void calcularFinInformeEventoFinInforme()
@@ -283,6 +405,49 @@ namespace Numeros_aleatorios.Colas
                     ventanillaInforme.liberar();
                 }
             }
+        }
+
+        private void calcularFinInformeEventoFinActualizacion()
+        {
+            if (this.evento.Equals(FIN_ACTUALIZACION) && lineaAnterior.tieneFinInforme())
+            {
+                ventanillaInforme.agregarFinInforme(lineaAnterior.obtenerFinInforme());
+            }
+        }
+
+        private Boolean tieneVentanillaInformePurgando()
+        {
+            return this.ventanillaInforme.estaPurgando();
+        }
+
+ 
+
+        private void calcularFinInformeEventoLlegadaCliente()
+        {
+            if (this.conoceProcedimiento.Equals("no"))
+            {
+                Cliente clienteActual = buscarClienteLibre();
+                if (lineaAnterior.tieneVentanillaInformePurgando())
+                {
+                    esperarPurga(clienteActual);
+                    return;
+                }
+                if (lineaAnterior.tieneVentanillaInformeOcupada())
+                {
+                    esperarInforme(clienteActual);
+                }
+                else
+                {
+                    this.tiempoFinInforme = exponencial.siguienteAleatorio();
+                    this.rndFinInforme = ((GeneradorExponencialNegativa)exponencial).getAleatorio();
+                    atenderInforme(clienteActual, tiempoFinInforme);
+                }
+            }
+        }
+        private void esperarPurga(Cliente clienteActual)
+        {
+            ventanillaInforme.agregarACola(clienteActual);
+            clienteActual.esperarInforme();
         }
 
         private void esperarInforme(Cliente clienteActual)
@@ -314,13 +479,7 @@ namespace Numeros_aleatorios.Colas
 
 
 
-        private void calcularFinInformeEventoFinActualizacion()
-        {
-            if (this.evento.Equals(FIN_ACTUALIZACION) && lineaAnterior.tieneFinInforme())
-            {
-                ventanillaInforme.agregarFinInforme(lineaAnterior.obtenerFinInforme());
-            }
-        }
+
 
         private Cliente buscarClienteLibre()
         {
@@ -386,24 +545,7 @@ namespace Numeros_aleatorios.Colas
             }
         }
 
-        private void calcularFinInformeEventoLlegadaCliente()
-        {
-            if (this.conoceProcedimiento.Equals("no"))
-            {
-                Cliente clienteActual = buscarClienteLibre();
-                if (lineaAnterior.tieneVentanillaInformeOcupada())
-                {
-                    esperarInforme(clienteActual);
-                }
-                else
-                {
-                    this.tiempoFinInforme = exponencial.siguienteAleatorio();
-                    this.rndFinInforme = ((GeneradorExponencialNegativa)exponencial).getAleatorio();
-                    atenderInforme(clienteActual, tiempoFinInforme);
 
-                }
-            }
-        }
 
         private void calcularFinActualizacionEventoFinInforme(double tiempo)
         {
