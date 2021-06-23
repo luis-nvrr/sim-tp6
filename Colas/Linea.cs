@@ -73,7 +73,7 @@ namespace Numeros_aleatorios.Colas
             this.llegadaCliente = mediaLLegada;
             this.truncador = new Truncador(4);
             this.aleatorios = new GeneradorUniformeLenguaje(truncador);
-            this.poisson = new GeneradorPoisson((GeneradorUniformeLenguaje)aleatorios, truncador, mediaLLegada);
+            this.poisson = new GeneradorPoisson(new GeneradorUniformeLenguaje(truncador), truncador, mediaLLegada);
             this.ventanillaInforme = new VentanillaInforme();
             this.ventanillaActualizacion = new VentanillaActualizacion();
             this.uniforme = new GeneradorUniformeAB((GeneradorUniformeLenguaje)aleatorios, truncador, a, b);
@@ -131,6 +131,7 @@ namespace Numeros_aleatorios.Colas
             this.rndEstadoFactura = -1;
             this.tiempoFinInforme = -1;
             this.tiempoFinCobro = -1;
+            this.tiempoParaLlegada = -1;
 
             acumuladorTiemposEsperaEnCaja = anterior.acumuladorTiemposEsperaEnCaja;
             cantidadClientesEsperan = anterior.cantidadClientesEsperan;
@@ -252,6 +253,7 @@ namespace Numeros_aleatorios.Colas
                 this.llegadaCliente = reloj + tiempoParaLlegada;
                 return;
             }
+
             this.llegadaCliente = lineaAnterior.llegadaCliente;
         }
 

@@ -86,9 +86,6 @@ namespace Numeros_aleatorios.Colas
             this.tiempoFinCobro = -1;
             this.exponencial = new GeneradorExponencialNegativa((GeneradorUniformeLenguaje)aleatorios, truncador, mediaFinInforme);
 
-            this.reloj50 = reloj50;
-            this.reloj70 = reloj70;
-            this.reloj100 = reloj100;
         }
 
         public LineaReloj(LineaReloj anterior, SimulacionReloj colas, int filaDesde, int filaHasta, int idFila)
@@ -123,6 +120,7 @@ namespace Numeros_aleatorios.Colas
             this.rndEstadoFactura = -1;
             this.tiempoFinInforme = -1;
             this.tiempoFinCobro = -1;
+            this.tiempoParaLlegada = -1;
 
             acumuladorTiemposEsperaEnCaja = anterior.acumuladorTiemposEsperaEnCaja;
             cantidadClientesEsperan = anterior.cantidadClientesEsperan;

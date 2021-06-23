@@ -163,7 +163,7 @@ namespace Numeros_aleatorios.Colas
             row[1] = linea.contadorLlegadas;
             row[2] = linea.evento;
             row[3] = linea.reloj;
-            row[4] = linea.tiempoParaLlegada;
+            row[4] = linea.tiempoParaLlegada.ToString() != "-1" ? linea.tiempoParaLlegada.ToString() : "";
             row[5] = linea.llegadaCliente;
             row[6] = linea.rndEstadoFactura.ToString() != "-1" ? linea.rndEstadoFactura.ToString() : "";
             row[7] = linea.estadoFactura;

@@ -224,7 +224,7 @@ namespace Numeros_aleatorios.Colas
             row[1] = LineaReloj.contadorLlegadas;
             row[2] = LineaReloj.evento;
             row[3] = LineaReloj.reloj;
-            row[4] = LineaReloj.tiempoParaLlegada;
+            row[4] = LineaReloj.tiempoParaLlegada.ToString() != "-1" ? LineaReloj.tiempoParaLlegada.ToString() : "";
             row[5] = LineaReloj.llegadaCliente;
             row[6] = LineaReloj.rndEstadoFactura.ToString() != "-1" ? LineaReloj.rndEstadoFactura.ToString() : "";
             row[7] = LineaReloj.estadoFactura;
