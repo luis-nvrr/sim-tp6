@@ -10,10 +10,10 @@ namespace Numeros_aleatorios.Colas
 {
     class SimulacionReloj
     {
-        double[] probabilidadesEstadosAcum = new double[] { 0.4, 1 };
+        double[] probabilidadesEstadosAcum = new double[] { 1, 0 };
         string[] estadosFactura = new string[] { "vencida", "al dia" };
 
-        double[] probabilidadesConoceProcedimientoAcum = new double[] { 0.8, 1 };
+        double[] probabilidadesConoceProcedimientoAcum = new double[] { 0, 1 };
         string[] conoceProcedimiento = new string[] { "si", "no" };
 
         DataTable resultados;
@@ -72,44 +72,13 @@ namespace Numeros_aleatorios.Colas
             tabla.Columns.Add("maxima espera en caja");
         }
 
-
-        public void simular(int filaDesde, int filaHasta, int cantSimulacionRelojes, 
-            int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion, int TiempoFinCobro, 
-            double reloj50, double reloj70, double reloj100 )
-        {
-            LineaReloj LineaRelojAnterior = new LineaReloj(5,TiempoLlegada, TiempoFinInforme,20, 50);
-            int i;
-
-            agregarLineaReloj(LineaRelojAnterior, 0);
-
-            for (i = 1; i <= cantSimulacionRelojes; i++)
-            {
-                LineaRelojActual = new LineaReloj(LineaRelojAnterior, this, filaDesde, filaHasta, i);
-                LineaRelojActual.calcularEvento();
-                LineaRelojActual.calcularSiguienteLlegada();
-                LineaRelojActual.calcularEstadoFactura(probabilidadesEstadosAcum, estadosFactura);
-                LineaRelojActual.calcularConoceProcedimiento(probabilidadesConoceProcedimientoAcum, conoceProcedimiento);
-                LineaRelojActual.calcularFinInforme();
-                LineaRelojActual.calcularColumnaFinActualizacion(TiempoFinActualizacion);
-                LineaRelojActual.calcularFinCobro();
-                LineaRelojAnterior = LineaRelojActual;
-
-                if (i >= filaDesde && i <= filaHasta)
-                {
-                    agregarLineaReloj(LineaRelojActual, i);
-                }
-            }
-
-            agregarLineaReloj(LineaRelojActual, LineaRelojActual.idFila);
-        }
-
         public DataTable getResultados()
         {
             return this.resultados;
         }
 
 
-        public void calcularPrimerasLlegadas(int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion, double uniformeA,
+        public void calcularPrimerasLlegadas(int TiempoLlegada, double TiempoFinInforme, double TiempoFinActualizacion, double uniformeA,
             double uniformeB)
         {
             LineaReloj LineaRelojAnterior = new LineaReloj(5, TiempoLlegada, TiempoFinInforme, uniformeA, uniformeB);
@@ -131,79 +100,6 @@ namespace Numeros_aleatorios.Colas
                 i++;
             }
             while (!LineaRelojActual.tieneLlegadasCumplidas());
-        }
-
-        //private void construirPaginas()
-        //{
-        //    int columnasPorPagina = 8;
-        //    cantidadPaginas = (int)Math.Ceiling((double)(resultados.Columns.Count-1) / (double)columnasPorPagina);
-
-        //    for (int i = 1; i <= cantidadPaginas; i++)
-        //    {
-        //        int columnaDesde = i * columnasPorPagina - columnasPorPagina + 1;
-        //        int columnaHasta = i * columnasPorPagina + 1;
-        //        construirTablaEntre(columnaDesde, columnaHasta);
-        //        paginas.Add(temp);
-        //    }
-        //}
-
-        //public void mostrarPagina(int pagina)
-        //{
-        //    if(pagina >=1 && pagina <= cantidadPaginas)
-        //    {
-        //        pantallaResultados.mostrarResultados(paginas[pagina - 1]);
-        //    } 
-        //}
-
-        public void calcularEstadisticas(GestorSimulacion gestor)
-        {
-            int tamañoTabla = resultados.Rows.Count-1;
-            string tiempoEspera = resultados.Rows[tamañoTabla][31].ToString();
-            string cantidadEspera = resultados.Rows[tamañoTabla][32].ToString();
-            double tiempoPromedioEsperaEnCajas = cantidadEspera != "0" ?
-                                                    double.Parse(tiempoEspera) / double.Parse(cantidadEspera) : 0;
-
-
-            string ocupacionInformes = resultados.Rows[tamañoTabla][33].ToString();
-            double tiempoOcupacionInformes = double.Parse(ocupacionInformes);
-
-            string ociosoActualizacion = resultados.Rows[tamañoTabla][34].ToString();
-            double tiempoOciosoActualizacion = double.Parse(ociosoActualizacion);
-
-            string maximaEsperaCaja = resultados.Rows[tamañoTabla][35].ToString();
-            double tiempoMaximoEsperaCaja = double.Parse(maximaEsperaCaja);
-
-            gestor.mostrarEstadisticas(tiempoPromedioEsperaEnCajas, tiempoOcupacionInformes, tiempoOciosoActualizacion, tiempoMaximoEsperaCaja);
-        }
-
-
-
-        private void construirTablaEntre(int desde, int hasta)
-        {
-            if(hasta > resultados.Columns.Count)
-            {
-                hasta = resultados.Columns.Count;
-            }
-
-            temp = new DataTable();
-
-            temp.Columns.Add(resultados.Columns[0].ColumnName);
-            for (int i = desde; i < hasta; i++)
-            {
-                temp.Columns.Add(resultados.Columns[i].ColumnName);
-            }
-
-            foreach(DataRow row in resultados.Rows)
-            {
-                var r = temp.Rows.Add();
-                r[0] = row[0];
-                for (int j = desde; j < hasta; j++)
-                {
-                    var column = resultados.Columns[j].ColumnName;
-                    r[column] = row[column];
-                }
-            }
-
         }
 
         public double getReloj()

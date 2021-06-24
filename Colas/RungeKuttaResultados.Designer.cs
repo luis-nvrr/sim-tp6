@@ -83,7 +83,6 @@ namespace Numeros_aleatorios.Colas
             this.grdResultados.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.grdResultados.Size = new System.Drawing.Size(1307, 409);
             this.grdResultados.TabIndex = 23;
-            this.grdResultados.VirtualMode = true;
             // 
             // RungeKuttaResultados
             // 

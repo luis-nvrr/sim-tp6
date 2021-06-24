@@ -10,10 +10,10 @@ namespace Numeros_aleatorios.Colas
 {
     class Simulacion
     {
-        double[] probabilidadesEstadosAcum = new double[] { 0.4, 1 };
+        double[] probabilidadesEstadosAcum = new double[] { 1, 0 };
         string[] estadosFactura = new string[] { "vencida", "al dia" };
 
-        double[] probabilidadesConoceProcedimientoAcum = new double[] { 0.8, 1 };
+        double[] probabilidadesConoceProcedimientoAcum = new double[] { 0, 1 };
         string[] conoceProcedimiento = new string[] { "si", "no" };
 
         double[] probabilidadesInestable = new double[] { 0.2, 0.5, 1 };
@@ -50,12 +50,15 @@ namespace Numeros_aleatorios.Colas
             tabla.Columns.Add("conoce procedimiento");
             tabla.Columns.Add("RND inestable");
             tabla.Columns.Add("tiempo p/ inestable");
-            tabla.Columns.Add("fin de inestable");
+            tabla.Columns.Add("inestable");
             tabla.Columns.Add("tiempo de purga");
             tabla.Columns.Add("fin de purga");
             tabla.Columns.Add("RND fin de informe");
             tabla.Columns.Add("tiempo de informe");
-            tabla.Columns.Add("fin informacion");
+            tabla.Columns.Add("fin de informe");
+            tabla.Columns.Add("estado informes");
+            tabla.Columns.Add("cola informes");
+            tabla.Columns.Add("tiempo restante");
             tabla.Columns.Add("fin actualizacion");
             tabla.Columns.Add("RND Fin Cobro");
             tabla.Columns.Add("Tiempo Fin Cobro");
@@ -64,9 +67,6 @@ namespace Numeros_aleatorios.Colas
             tabla.Columns.Add("fin caja 3");
             tabla.Columns.Add("fin caja 4");
             tabla.Columns.Add("fin caja 5");
-            tabla.Columns.Add("estado informes");
-            tabla.Columns.Add("cola informes");
-            tabla.Columns.Add("tiempo restante");
             tabla.Columns.Add("estado actualizacion");
             tabla.Columns.Add("cola actualizacion");
             tabla.Columns.Add("estado caja 1");
@@ -84,7 +84,7 @@ namespace Numeros_aleatorios.Colas
 
 
         public void simular(int filaDesde, int filaHasta, int cantSimulaciones, 
-            int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion, 
+            int TiempoLlegada, double TiempoFinInforme, double TiempoFinActualizacion, 
             double reloj50, double reloj70, double reloj100, double UniformeA, double UniformeB,
             double pasoDescarga)
         {
@@ -146,11 +146,6 @@ namespace Numeros_aleatorios.Colas
             gestor.mostrarEstadisticas(tiempoPromedioEsperaEnCajas, tiempoOcupacionInformes, tiempoOciosoActualizacion, tiempoMaximoEsperaCaja);
         }
 
-        public double getReloj()
-        {
-            return this.lineaActual.reloj;
-        }
-
         public void agregarColumna()
         {
             cantidadClientes++;
@@ -179,17 +174,17 @@ namespace Numeros_aleatorios.Colas
             row[15] = linea.rndFinInforme.ToString() != "-1"? linea.rndFinInforme.ToString(): "";
             row[16] = linea.tiempoFinInforme.ToString() != "-1" ? linea.tiempoFinInforme.ToString() : "";
             row[17] = linea.ventanillaInforme.finInforme.ToString() != "-1" ? linea.ventanillaInforme.finInforme.ToString() : "";
-            row[18] = linea.ventanillaActualizacion.finActualizacion.ToString() != "-1" ? linea.ventanillaActualizacion.finActualizacion.ToString() : "";
-            row[19] = linea.rndFinCobro.ToString() != "-1" ? linea.rndFinCobro.ToString( ): "";
-            row[20] = linea.tiempoFinCobro.ToString() != "-1"? linea.tiempoFinCobro.ToString() : "";
-            row[21] = linea.cajas[0].finCobro.ToString() != "-1" ? linea.cajas[0].finCobro.ToString() : "" ;
-            row[22] = linea.cajas[1].finCobro.ToString() != "-1" ? linea.cajas[1].finCobro.ToString() : "";
-            row[23] = linea.cajas[2].finCobro.ToString() != "-1" ? linea.cajas[2].finCobro.ToString() : "";
-            row[24] = linea.cajas[3].finCobro.ToString() != "-1" ? linea.cajas[3].finCobro.ToString() : "";
-            row[25] = linea.cajas[4].finCobro.ToString() != "-1" ? linea.cajas[4].finCobro.ToString() : "";
-            row[26] = linea.ventanillaInforme.estado;
-            row[27] = linea.ventanillaInforme.cola.Count;
-            row[28] = linea.ventanillaInforme.tiempoRestanteAtencion.ToString() != "-1" ? linea.ventanillaInforme.tiempoRestanteAtencion.ToString() : "";
+            row[18] = linea.ventanillaInforme.estado;
+            row[19] = linea.ventanillaInforme.cola.Count;
+            row[20] = linea.ventanillaInforme.tiempoRestanteAtencion.ToString() != "-1" ? linea.ventanillaInforme.tiempoRestanteAtencion.ToString() : "";
+            row[21] = linea.ventanillaActualizacion.finActualizacion.ToString() != "-1" ? linea.ventanillaActualizacion.finActualizacion.ToString() : "";
+            row[22] = linea.rndFinCobro.ToString() != "-1" ? linea.rndFinCobro.ToString( ): "";
+            row[23] = linea.tiempoFinCobro.ToString() != "-1"? linea.tiempoFinCobro.ToString() : "";
+            row[24] = linea.cajas[0].finCobro.ToString() != "-1" ? linea.cajas[0].finCobro.ToString() : "" ;
+            row[25] = linea.cajas[1].finCobro.ToString() != "-1" ? linea.cajas[1].finCobro.ToString() : "";
+            row[26] = linea.cajas[2].finCobro.ToString() != "-1" ? linea.cajas[2].finCobro.ToString() : "";
+            row[27] = linea.cajas[3].finCobro.ToString() != "-1" ? linea.cajas[3].finCobro.ToString() : "";
+            row[28] = linea.cajas[4].finCobro.ToString() != "-1" ? linea.cajas[4].finCobro.ToString() : "";
             row[29] = linea.ventanillaActualizacion.estado;
             row[30] = linea.ventanillaActualizacion.cola.Count;
             row[31]  = linea.cajas[0].estado;

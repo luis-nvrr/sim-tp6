@@ -63,9 +63,8 @@ namespace Numeros_aleatorios.Colas
         private double reloj70;
         private double reloj100;
 
-        public LineaReloj(int cantidadCajas, int mediaLLegada, int mediaFinInforme, double a, double b)
+        public LineaReloj(int cantidadCajas, double mediaLLegada, double mediaFinInforme, double a, double b)
         {
-            this.llegadaCliente = mediaLLegada;
             this.truncador = new Truncador(4);
             this.aleatorios = new GeneradorUniformeLenguaje(truncador);
             this.poisson = new GeneradorPoisson((GeneradorUniformeLenguaje)aleatorios, truncador, mediaLLegada);
@@ -83,8 +82,9 @@ namespace Numeros_aleatorios.Colas
             this.rndEstadoFactura = -1;
             this.tiempoFinInforme = -1;
             this.tiempoParaLlegada = 60;
+            this.llegadaCliente = 60;
             this.tiempoFinCobro = -1;
-            this.exponencial = new GeneradorExponencialNegativa((GeneradorUniformeLenguaje)aleatorios, truncador, mediaFinInforme);
+            this.exponencial = new GeneradorExponencialNegativa((GeneradorUniformeLenguaje)aleatorios, truncador, (double)(1.0/mediaFinInforme));
 
         }
 
@@ -100,10 +100,8 @@ namespace Numeros_aleatorios.Colas
             this.ventanillaInforme = anterior.obtenerVentanillaInforme();
             this.ventanillaActualizacion = anterior.obtenerVentanillaActualizacion();
 
-            Caja[] temp = new Caja[anterior.cajas.Count];
-            anterior.cajas.CopyTo(temp);
 
-            this.cajas = new List<Caja>(temp);
+            this.cajas = anterior.cajas;
             this.clientes = anterior.clientes;
 
             colaCaja = anterior.colaCaja;
@@ -137,12 +135,14 @@ namespace Numeros_aleatorios.Colas
 
         public VentanillaInforme obtenerVentanillaInforme()
         {
-            return (VentanillaInforme)this.ventanillaInforme.Clone();
+            return this.ventanillaInforme;
+            //return (VentanillaInforme)this.ventanillaInforme.Clone();
         }
 
         public VentanillaActualizacion obtenerVentanillaActualizacion()
         {
-            return (VentanillaActualizacion) this.ventanillaActualizacion.Clone();
+            return this.ventanillaActualizacion;
+            //return (VentanillaActualizacion) this.ventanillaActualizacion.Clone();
         }
 
         public void calcularFinInforme()
@@ -193,7 +193,7 @@ namespace Numeros_aleatorios.Colas
             {
                 if (caja.finCobro < reloj && caja.finCobro > 0) {
                     reloj = caja.finCobro;
-                    cajaFinCobro = (Caja)this.cajas.Where(x => x.id == caja.id).FirstOrDefault();
+                    cajaFinCobro = caja;
                     evento = FIN_COBRO;
                 }
             }

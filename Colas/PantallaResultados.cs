@@ -18,8 +18,8 @@ namespace Numeros_aleatorios.Colas
         int desde;
         int hasta;
         int tiempoLlegada;
-        int tiempoFinInforme;
-        int tiempoFinActualizacion;
+        double tiempoFinInforme;
+        double tiempoFinActualizacion;
         double uniformeA;
         double uniformeB;
         double pasoInestabilidad;
@@ -33,30 +33,16 @@ namespace Numeros_aleatorios.Colas
 
         private void PantallaResultados_Load(object sender, EventArgs e)
         {
-            txtCantSimulaciones.Text = "1000";
-            txtTiempoPromedioLlegadas.Text = "60";
-            txtTiempoPromedioFinInforme.Text = "20";
+            txtCantSimulaciones.Text = "500";
+            txtTiempoPromedioLlegadas.Text = "200";
+            txtTiempoPromedioFinInforme.Text = "700";
             txtTiempoPromedioFinActualizacion.Text = "40";
-            txtFinCobroA.Text = "20";
-            txtFinCobroB.Text = "50";
+            txtFinCobroA.Text = "40";
+            txtFinCobroB.Text = "60";
             txtDesde.Text = "0";
-            txtHasta.Text = "100";
+            txtHasta.Text = "200";
             txtPasoInestabilidad.Text = "0.01";
             txtPasoDescarga.Text = "1";
-        }
-
-        private void limpiarCampos()
-        {
-            txtCantSimulaciones.Text = "";
-            txtTiempoPromedioLlegadas.Text = "";
-            txtTiempoPromedioFinInforme.Text = "";
-            txtTiempoPromedioFinActualizacion.Text = "";
-            txtFinCobroA.Text = "";
-            txtFinCobroB.Text = "";
-            txtDesde.Text = "";
-            txtHasta.Text = "";
-            txtPasoInestabilidad.Text = "";
-            txtPasoDescarga.Text = "";
         }
 
         public void mostrarEstadisticas(double tiempoPromedioEsperaEnCaja, 
@@ -85,18 +71,10 @@ namespace Numeros_aleatorios.Colas
 
         private void btnSiguiente_Click(object sender, EventArgs e)
         {
-            //filaSeleccionada = grdRangoResultados.CurrentCell.RowIndex; 
-            //paginaActual++;
-            //gestor.mostrarPagina(paginaActual);
-            //grdRangoResultados.CurrentCell = grdRangoResultados.Rows[filaSeleccionada].Cells[0];
         }
 
         private void btnAnterior_Click(object sender, EventArgs e)
         {
-            //filaSeleccionada = grdRangoResultados.CurrentCell.RowIndex;
-            //paginaActual--;
-            //gestor.mostrarPagina(paginaActual);
-            //grdRangoResultados.CurrentCell = grdRangoResultados.Rows[filaSeleccionada].Cells[0];
         }
 
         private void grdRangoResultados_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -128,8 +106,8 @@ namespace Numeros_aleatorios.Colas
             desde = int.Parse(txtDesde.Text);
             hasta = int.Parse(txtHasta.Text);
             tiempoLlegada = int.Parse(txtTiempoPromedioLlegadas.Text);
-            tiempoFinInforme = int.Parse(txtTiempoPromedioFinInforme.Text);
-            tiempoFinActualizacion = int.Parse(txtTiempoPromedioFinActualizacion.Text);
+            tiempoFinInforme = double.Parse(txtTiempoPromedioFinInforme.Text);
+            tiempoFinActualizacion = double.Parse(txtTiempoPromedioFinActualizacion.Text);
             uniformeA = double.Parse(txtFinCobroA.Text);
             uniformeB = double.Parse(txtFinCobroB.Text);
             pasoInestabilidad = double.Parse(txtPasoInestabilidad.Text);

@@ -25,13 +25,16 @@ namespace Numeros_aleatorios.Colas
         }
 
         public void simular(int filaDesde, int filaHasta, int cantSimulaciones, int TiempoLlegada, 
-            int TiempoFinInforme, int TiempoFinActualizacion, double uniformeA,double uniformeB,
+            double TiempoFinInforme, double TiempoFinActualizacion, double uniformeA,double uniformeB,
             double hInestabilidad, double hDescarga)
         {
             calcularPrimerasLlegadas(TiempoLlegada, TiempoFinInforme, TiempoFinActualizacion, uniformeA, uniformeB);
+            MessageBox.Show("60");
             calcularTiempos(hInestabilidad);
+            MessageBox.Show("tiempos");
             ejecutar(filaDesde, filaHasta, cantSimulaciones, TiempoLlegada, TiempoFinInforme, 
                 TiempoFinActualizacion, reloj50, reloj70, reloj100, uniformeA, uniformeB, hDescarga) ;
+            MessageBox.Show("sim");
             calcularEstadisticas();
         }
 
@@ -53,7 +56,7 @@ namespace Numeros_aleatorios.Colas
         }
 
         private void ejecutar(int filaDesde, int filaHasta, int cantSimulaciones, 
-            int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion,
+            int TiempoLlegada, double TiempoFinInforme, double TiempoFinActualizacion,
             double reloj50, double  reloj70, double reloj100, double uniformeA, double uniformeB,
             double hDescarga)
         {
@@ -65,7 +68,7 @@ namespace Numeros_aleatorios.Colas
             pantalla.Show();
         }
 
-        private void calcularPrimerasLlegadas(int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion, double uniformeA, double uniformeB)
+        private void calcularPrimerasLlegadas(int TiempoLlegada, double TiempoFinInforme, double TiempoFinActualizacion, double uniformeA, double uniformeB)
         {
             PantallaLlegadas pantallaLlegadas = new PantallaLlegadas();
             simulacionLlegadas= new SimulacionReloj();
