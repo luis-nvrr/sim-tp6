@@ -48,7 +48,8 @@ namespace Numeros_aleatorios.Colas
 
             pantallaRungeKutta50.mostrarResultados(rungeKutta.tabla, "Inestabilidad al 50%: " + truncador.truncar(reloj50).ToString() + " seg" + "\n"
                 + "Inestabilidad al 70%: " + truncador.truncar(reloj70).ToString() + " seg" + "\n"
-                + "Inestabilidad al 100%: " + truncador.truncar(reloj100).ToString() + " seg" + "\n");
+                + "Inestabilidad al 100%: " + truncador.truncar(reloj100).ToString() + " seg" + "\n"
+                 + "Alfa: " + alfa);
         }
 
         private void ejecutar(int filaDesde, int filaHasta, int cantSimulaciones, 

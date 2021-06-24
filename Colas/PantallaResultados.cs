@@ -13,7 +13,6 @@ namespace Numeros_aleatorios.Colas
     public partial class PantallaResultados : Form
     {
         private int paginaActual;
-        private GestorSimulacion gestor;
         private int filaSeleccionada;
         int cantSimulaciones;
         int desde;
@@ -105,8 +104,24 @@ namespace Numeros_aleatorios.Colas
             grdRangoResultados.ClearSelection();
         }
 
+        private void cerrarVentanas()
+        {
+            List<Form> openForms = new List<Form>();
+
+            foreach (Form f in Application.OpenForms)
+                openForms.Add(f);
+
+            foreach (Form f in openForms)
+            {
+                if (f.Name != "PantallaResultados")
+                    f.Close();
+            }
+        }
+
         private void btnSimular_Click(object sender, EventArgs e)
         {
+            cerrarVentanas();
+
             paginaActual = 1;
             grdRangoResultados.DataSource = null;
             cantSimulaciones = int.Parse(txtCantSimulaciones.Text);
@@ -120,7 +135,8 @@ namespace Numeros_aleatorios.Colas
             pasoInestabilidad = double.Parse(txtPasoInestabilidad.Text);
             pasoDescarga = double.Parse(txtPasoDescarga.Text);
 
-            gestor = new GestorSimulacion(this);
+
+            GestorSimulacion gestor = new GestorSimulacion(this);
             if (hasta - desde <= 500) 
             {
                 gestor.simular(desde, hasta, cantSimulaciones, tiempoLlegada, 
