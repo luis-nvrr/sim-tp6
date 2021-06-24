@@ -21,7 +21,10 @@ namespace Numeros_aleatorios.Colas
         int tiempoLlegada;
         int tiempoFinInforme;
         int tiempoFinActualizacion;
-        int tiempoFinCobro;
+        double uniformeA;
+        double uniformeB;
+        double pasoInestabilidad;
+        double pasoDescarga;
 
         public PantallaResultados()
         {
@@ -35,10 +38,12 @@ namespace Numeros_aleatorios.Colas
             txtTiempoPromedioLlegadas.Text = "60";
             txtTiempoPromedioFinInforme.Text = "20";
             txtTiempoPromedioFinActualizacion.Text = "40";
-            txtTiempoPromedioFinCobro.Text = "30";
+            txtFinCobroA.Text = "20";
+            txtFinCobroB.Text = "50";
             txtDesde.Text = "0";
-            txtHasta.Text = "500";
-         
+            txtHasta.Text = "100";
+            txtPasoInestabilidad.Text = "0.01";
+            txtPasoDescarga.Text = "1";
         }
 
         private void limpiarCampos()
@@ -47,9 +52,12 @@ namespace Numeros_aleatorios.Colas
             txtTiempoPromedioLlegadas.Text = "";
             txtTiempoPromedioFinInforme.Text = "";
             txtTiempoPromedioFinActualizacion.Text = "";
-            txtTiempoPromedioFinCobro.Text = "";
+            txtFinCobroA.Text = "";
+            txtFinCobroB.Text = "";
             txtDesde.Text = "";
             txtHasta.Text = "";
+            txtPasoInestabilidad.Text = "";
+            txtPasoDescarga.Text = "";
         }
 
         public void mostrarEstadisticas(double tiempoPromedioEsperaEnCaja, 
@@ -62,7 +70,6 @@ namespace Numeros_aleatorios.Colas
             txtOcupacionInformes.Text = tiempoOcupacionInformes.ToString();
             txtOciosoActualizacion.Text = tiempoOciosoActualizacion.ToString();
             txtMaximaEsperaCajas.Text = tiempoMaximoEsperaEnCaja.ToString();
-
         }
 
         public void mostrarResultados(DataTable resultados)
@@ -108,13 +115,16 @@ namespace Numeros_aleatorios.Colas
             tiempoLlegada = int.Parse(txtTiempoPromedioLlegadas.Text);
             tiempoFinInforme = int.Parse(txtTiempoPromedioFinInforme.Text);
             tiempoFinActualizacion = int.Parse(txtTiempoPromedioFinActualizacion.Text);
-            tiempoFinCobro = int.Parse(txtTiempoPromedioFinCobro.Text);
+            uniformeA = double.Parse(txtFinCobroA.Text);
+            uniformeB = double.Parse(txtFinCobroB.Text);
+            pasoInestabilidad = double.Parse(txtPasoInestabilidad.Text);
+            pasoDescarga = double.Parse(txtPasoDescarga.Text);
 
-         
             gestor = new GestorSimulacion(this);
             if (hasta - desde <= 500) 
             {
-                gestor.simular(desde, hasta, cantSimulaciones, tiempoLlegada, tiempoFinInforme, tiempoFinActualizacion);
+                gestor.simular(desde, hasta, cantSimulaciones, tiempoLlegada, 
+                    tiempoFinInforme, tiempoFinActualizacion, uniformeA, uniformeB, pasoInestabilidad, pasoDescarga);
             }
             else
             {

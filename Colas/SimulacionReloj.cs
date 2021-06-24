@@ -109,9 +109,10 @@ namespace Numeros_aleatorios.Colas
         }
 
 
-        public void calcularPrimerasLlegadas(int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion)
+        public void calcularPrimerasLlegadas(int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion, double uniformeA,
+            double uniformeB)
         {
-            LineaReloj LineaRelojAnterior = new LineaReloj(5, TiempoLlegada, TiempoFinInforme, 20, 50);
+            LineaReloj LineaRelojAnterior = new LineaReloj(5, TiempoLlegada, TiempoFinInforme, uniformeA, uniformeB);
 
             agregarLineaReloj(LineaRelojAnterior, 0);
             int i = 0;

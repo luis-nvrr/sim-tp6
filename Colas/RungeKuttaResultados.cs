@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Reflection;
+
 
 namespace Numeros_aleatorios.Colas
 {
@@ -22,12 +24,14 @@ namespace Numeros_aleatorios.Colas
   
         }
 
-        public void mostrarResultados(DataTable resultados)
+        public void mostrarResultados(DataTable resultados, String texto)
         {
-            this.grdResultados.DoubleBuffered(true);
-            grdResultados.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+           this.grdResultados.DoubleBuffered(true);
+           grdResultados.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.grdResultados.DataSource = resultados;
+            this.lblTexto.Text = texto;
             this.Show();
         }
+
     }
 }

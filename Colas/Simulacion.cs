@@ -26,9 +26,9 @@ namespace Numeros_aleatorios.Colas
         private int cantidadPaginas;
         private List<DataTable> paginas;
         private Linea lineaActual;
-        private decimal alfa;
+        private double alfa;
         
-        public Simulacion(decimal alfa)
+        public Simulacion(double alfa)
         {
             this.alfa = alfa;
             resultados = new DataTable();
@@ -84,14 +84,16 @@ namespace Numeros_aleatorios.Colas
 
 
         public void simular(int filaDesde, int filaHasta, int cantSimulaciones, 
-            int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion, int TiempoFinCobro, 
-            double reloj50, double reloj70, double reloj100 )
+            int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion, 
+            double reloj50, double reloj70, double reloj100, double UniformeA, double UniformeB,
+            double pasoDescarga)
         {
             tiempos = new double[]{reloj50, reloj70, reloj100 };
 
-            Linea lineaAnterior = new Linea(5,TiempoLlegada,TiempoFinInforme,20, 50);
+            Linea lineaAnterior = new Linea(5,TiempoLlegada,TiempoFinInforme,UniformeA, UniformeB);
             lineaAnterior.calcularFinInestable(probabilidadesInestable, tiempos);
             int i;
+         
 
             agregarLinea(lineaAnterior, 0);
 
@@ -103,7 +105,7 @@ namespace Numeros_aleatorios.Colas
                 lineaActual.calcularEstadoFactura(probabilidadesEstadosAcum, estadosFactura);
                 lineaActual.calcularConoceProcedimiento(probabilidadesConoceProcedimientoAcum, conoceProcedimiento);
                 lineaActual.calcularFinInestable(probabilidadesInestable, tiempos);
-                lineaActual.calcularFinPurga(alfa);
+                lineaActual.calcularFinPurga(alfa, pasoDescarga);
                 lineaActual.calcularFinInforme();
                 lineaActual.calcularColumnaFinActualizacion(TiempoFinActualizacion);
                 lineaActual.calcularFinCobro();

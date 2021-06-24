@@ -318,12 +318,17 @@ namespace Numeros_aleatorios.Colas
 
         }
 
-        public void calcularFinPurga(decimal alfa)
+        public void calcularFinPurga(double alfa, double pasoDescarga)
         {
             if (this.evento.Equals(INESTABLE))
             {
                 RungeKutta runge = new RungeKutta();
-                runge.calcularRungeKuttaTiemposPurga(1,alfa,contadorLlegadas);
+                runge.calcularRungeKuttaTiemposPurga((double)pasoDescarga, alfa,contadorLlegadas);
+
+                RungeKuttaResultados pantalla = new RungeKuttaResultados();
+
+                pantalla.mostrarResultados(runge.tabla, "Inestabilidad: " + reloj.ToString() + " seg" + "\n"
+                    + "Diferencia e(i+1) - ei: " + runge.diferencia.ToString());
 
                 contadorLlegadas = 0;
                 this.tiempoPurga = (double)runge.getTi();

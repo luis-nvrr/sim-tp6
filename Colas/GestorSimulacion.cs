@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Numeros_aleatorios.LibreriaSimulacion;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Numeros_aleatorios.Colas
 {
@@ -11,7 +13,7 @@ namespace Numeros_aleatorios.Colas
         PantallaResultados pantalla;
         Simulacion simulacion;
         SimulacionReloj simulacionLlegadas;
-        private decimal alfa;
+        private double alfa;
         private double reloj100;
         private double reloj50;
         private double reloj70;
@@ -22,44 +24,51 @@ namespace Numeros_aleatorios.Colas
             this.pantalla = pantalla;
         }
 
-        public void simular(int filaDesde, int filaHasta, int cantSimulaciones, int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion)
+        public void simular(int filaDesde, int filaHasta, int cantSimulaciones, int TiempoLlegada, 
+            int TiempoFinInforme, int TiempoFinActualizacion, double uniformeA,double uniformeB,
+            double hInestabilidad, double hDescarga)
         {
-            calcularPrimerasLlegadas(TiempoLlegada, TiempoFinInforme, TiempoFinActualizacion);
-            calcularTiempos();
-            ejecutar(filaDesde, filaHasta, cantSimulaciones, TiempoLlegada, TiempoFinInforme, TiempoFinActualizacion, reloj50, reloj70, reloj100) ;
+            calcularPrimerasLlegadas(TiempoLlegada, TiempoFinInforme, TiempoFinActualizacion, uniformeA, uniformeB);
+            calcularTiempos(hInestabilidad);
+            ejecutar(filaDesde, filaHasta, cantSimulaciones, TiempoLlegada, TiempoFinInforme, 
+                TiempoFinActualizacion, reloj50, reloj70, reloj100, uniformeA, uniformeB, hDescarga) ;
             calcularEstadisticas();
         }
 
-        private void calcularTiempos()
+        private void calcularTiempos(double hInestabilidad)
         {
             RungeKutta rungeKutta = new RungeKutta();
-            reloj50 = (double)rungeKutta.calcularRungeKuttaTiemposInestable((decimal)0.01, alfa, 50);
+            RungeKuttaResultados pantallaRungeKutta50 = new RungeKuttaResultados();
+        
+            rungeKutta.calcularRungeKuttaTiemposInestable((double)hInestabilidad, alfa, 50, 70);
+            reloj50 = rungeKutta.tiempo50;
+            reloj70 = rungeKutta.tiempo70;
 
-            RungeKuttaResultados rungeKutta50 = new RungeKuttaResultados();
-            rungeKutta50.mostrarResultados(rungeKutta.tabla);
+            Truncador truncador = new Truncador(4);
 
-            rungeKutta = new RungeKutta();
-            reloj70 = (double)rungeKutta.calcularRungeKuttaTiemposInestable((decimal)0.01, alfa, 70); ;
-
-            RungeKuttaResultados rungeKutta70 = new RungeKuttaResultados();
-            rungeKutta70.mostrarResultados(rungeKutta.tabla);
+            pantallaRungeKutta50.mostrarResultados(rungeKutta.tabla, "Inestabilidad al 50%: " + truncador.truncar(reloj50).ToString() + " seg" + "\n"
+                + "Inestabilidad al 70%: " + truncador.truncar(reloj70).ToString() + " seg" + "\n"
+                + "Inestabilidad al 100%: " + truncador.truncar(reloj100).ToString() + " seg" + "\n");
         }
 
         private void ejecutar(int filaDesde, int filaHasta, int cantSimulaciones, 
             int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion,
-            double reloj50, double  reloj70, double reloj100)
+            double reloj50, double  reloj70, double reloj100, double uniformeA, double uniformeB,
+            double hDescarga)
         {
             simulacion = new Simulacion(alfa);
             simulacion.simular(filaDesde, filaHasta, cantSimulaciones, TiempoLlegada, 
-                TiempoFinInforme, TiempoFinActualizacion, 0, reloj50, reloj70, reloj100); // cambiar 0 por los parametros de la unfiorme del cobro
+                TiempoFinInforme, TiempoFinActualizacion, reloj50, 
+                reloj70, reloj100, uniformeA, uniformeB, hDescarga);
             pantalla.mostrarResultados(simulacion.getResultados());
+            pantalla.Show();
         }
 
-        private void calcularPrimerasLlegadas(int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion)
+        private void calcularPrimerasLlegadas(int TiempoLlegada, int TiempoFinInforme, int TiempoFinActualizacion, double uniformeA, double uniformeB)
         {
             PantallaLlegadas pantallaLlegadas = new PantallaLlegadas();
             simulacionLlegadas= new SimulacionReloj();
-            simulacionLlegadas.calcularPrimerasLlegadas(TiempoLlegada, TiempoFinInforme, TiempoFinActualizacion);
+            simulacionLlegadas.calcularPrimerasLlegadas(TiempoLlegada, TiempoFinInforme, TiempoFinActualizacion, uniformeA, uniformeB);
             pantallaLlegadas.mostrarResultados(simulacionLlegadas.getResultados());
             calcularAlfa();
         }
@@ -67,10 +76,10 @@ namespace Numeros_aleatorios.Colas
         private void calcularAlfa()
         {
             this.reloj100 = simulacionLlegadas.getReloj();
-            this.alfa = (decimal)(Math.Log(100 / 5) / reloj100);
+            this.alfa = (double)(Math.Log(100 / 5) / reloj100);
         }
 
-        public decimal getAlfa()
+        public double getAlfa()
         {
             return alfa;
         }
