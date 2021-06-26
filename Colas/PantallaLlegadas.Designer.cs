@@ -63,8 +63,6 @@ namespace Numeros_aleatorios.Colas
             this.grdRangoResultados.AllowUserToDeleteRows = false;
             this.grdRangoResultados.AllowUserToResizeColumns = false;
             this.grdRangoResultados.AllowUserToResizeRows = false;
-            this.grdRangoResultados.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.grdRangoResultados.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.grdRangoResultados.BackgroundColor = System.Drawing.Color.White;
             this.grdRangoResultados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdRangoResultados.Location = new System.Drawing.Point(29, 155);

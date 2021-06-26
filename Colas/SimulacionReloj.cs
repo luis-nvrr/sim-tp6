@@ -17,11 +17,8 @@ namespace Numeros_aleatorios.Colas
         string[] conoceProcedimiento = new string[] { "si", "no" };
 
         DataTable resultados;
-        DataTable temp;
         private int cantidadClientes;
         private int indice;
-        private int cantidadPaginas;
-        private List<DataTable> paginas;
         private LineaReloj LineaRelojActual;
 
 
@@ -29,47 +26,46 @@ namespace Numeros_aleatorios.Colas
         {
             resultados = new DataTable();
             crearTabla(resultados);
-            this.paginas = new List<DataTable>();
         }
 
         private void crearTabla(DataTable tabla)
         {
-            tabla.Columns.Add("i");
-            tabla.Columns.Add("cant llegadas");
-            tabla.Columns.Add("evento");
-            tabla.Columns.Add("reloj");
-            tabla.Columns.Add("tiempo para llegada");
-            tabla.Columns.Add("llegada cliente");
-            tabla.Columns.Add("RND estado factura.");
-            tabla.Columns.Add("estado factura");
-            tabla.Columns.Add("RND conoce");
-            tabla.Columns.Add("conoce procedimiento");
-            tabla.Columns.Add("RND fin de informe");
-            tabla.Columns.Add("tiempo de informe");
-            tabla.Columns.Add("fin informacion");
-            tabla.Columns.Add("fin actualizacion");
-            tabla.Columns.Add("RND Fin Cobro");
-            tabla.Columns.Add("Tiempo Fin Cobro");
-            tabla.Columns.Add("fin caja 1");
-            tabla.Columns.Add("fin caja 2");
-            tabla.Columns.Add("fin caja 3");
-            tabla.Columns.Add("fin caja 4");
-            tabla.Columns.Add("fin caja 5");
-            tabla.Columns.Add("estado informes");
-            tabla.Columns.Add("cola informes");
-            tabla.Columns.Add("estado actualizacion");
-            tabla.Columns.Add("cola actualizacion");
-            tabla.Columns.Add("estado caja 1");
-            tabla.Columns.Add("estado caja 2");
-            tabla.Columns.Add("estado caja 3");
-            tabla.Columns.Add("estado caja 4");
-            tabla.Columns.Add("estado caja 5");
-            tabla.Columns.Add("cola caja");
-            tabla.Columns.Add("acumulado tiempo espera en caja"); //29
-            tabla.Columns.Add("cantidad que espera");
-            tabla.Columns.Add("tiempo ocupacion informes");
-            tabla.Columns.Add("tiempo ocioso actualizacion");
-            tabla.Columns.Add("maxima espera en caja");
+            tabla.Columns.Add("i", typeof(string));
+            tabla.Columns.Add("cant llegadas", typeof(string));
+            tabla.Columns.Add("evento", typeof(string));
+            tabla.Columns.Add("reloj", typeof(string));
+            tabla.Columns.Add("tiempo para llegada", typeof(string));
+            tabla.Columns.Add("llegada cliente", typeof(string));
+            tabla.Columns.Add("RND estado factura.", typeof(string));
+            tabla.Columns.Add("estado factura", typeof(string));
+            tabla.Columns.Add("RND conoce", typeof(string));
+            tabla.Columns.Add("conoce procedimiento", typeof(string));
+            tabla.Columns.Add("RND fin de informe", typeof(string));
+            tabla.Columns.Add("tiempo de informe", typeof(string));
+            tabla.Columns.Add("fin informacion", typeof(string));
+            tabla.Columns.Add("fin actualizacion", typeof(string));
+            tabla.Columns.Add("RND Fin Cobro", typeof(string));
+            tabla.Columns.Add("Tiempo Fin Cobro", typeof(string));
+            tabla.Columns.Add("fin caja 1", typeof(string));
+            tabla.Columns.Add("fin caja 2", typeof(string));
+            tabla.Columns.Add("fin caja 3", typeof(string));
+            tabla.Columns.Add("fin caja 4", typeof(string));
+            tabla.Columns.Add("fin caja 5", typeof(string));
+            tabla.Columns.Add("estado informes", typeof(string));
+            tabla.Columns.Add("cola informes", typeof(string));
+            tabla.Columns.Add("estado actualizacion", typeof(string));
+            tabla.Columns.Add("cola actualizacion", typeof(string));
+            tabla.Columns.Add("estado caja 1", typeof(string));
+            tabla.Columns.Add("estado caja 2", typeof(string));
+            tabla.Columns.Add("estado caja 3", typeof(string));
+            tabla.Columns.Add("estado caja 4", typeof(string));
+            tabla.Columns.Add("estado caja 5", typeof(string));
+            tabla.Columns.Add("cola caja", typeof(string));
+            tabla.Columns.Add("acumulado tiempo espera en caja", typeof(string));
+            tabla.Columns.Add("cantidad que espera", typeof(string));
+            tabla.Columns.Add("tiempo ocupacion informes", typeof(string));
+            tabla.Columns.Add("tiempo ocioso actualizacion", typeof(string));
+            tabla.Columns.Add("maxima espera en caja", typeof(string));
         }
 
         public DataTable getResultados()
@@ -92,14 +88,15 @@ namespace Numeros_aleatorios.Colas
                 LineaRelojActual.calcularSiguienteLlegada();
                 LineaRelojActual.calcularEstadoFactura(probabilidadesEstadosAcum, estadosFactura);
                 LineaRelojActual.calcularConoceProcedimiento(probabilidadesConoceProcedimientoAcum, conoceProcedimiento);
-                LineaRelojActual.calcularFinInforme();
-                LineaRelojActual.calcularColumnaFinActualizacion(TiempoFinActualizacion);
                 LineaRelojActual.calcularFinCobro();
+                LineaRelojActual.calcularColumnaFinActualizacion(TiempoFinActualizacion);
+                LineaRelojActual.calcularFinInforme();
                 LineaRelojAnterior = LineaRelojActual;
                 agregarLineaReloj(LineaRelojActual, i);
                 i++;
             }
             while (!LineaRelojActual.tieneLlegadasCumplidas());
+
         }
 
         public double getReloj()
@@ -147,7 +144,7 @@ namespace Numeros_aleatorios.Colas
             row[27] = LineaReloj.cajas[2].estado;
             row[28] = LineaReloj.cajas[3].estado;
             row[29] = LineaReloj.cajas[4].estado;
-            row[30] = LineaReloj.colaCaja;
+            row[30] = Caja.cola.Count;
             row[31] = LineaReloj.acumuladorTiemposEsperaEnCaja;
             row[32] = LineaReloj.cantidadClientesEsperan;
             row[33] = LineaReloj.acumuladorTiempoOcupacionVentanillaInformes;
@@ -164,8 +161,6 @@ namespace Numeros_aleatorios.Colas
                 }
             resultados.Rows.Add(row);
 
-         
         }
-
     }
 }

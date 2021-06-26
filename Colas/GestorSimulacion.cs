@@ -29,12 +29,9 @@ namespace Numeros_aleatorios.Colas
             double hInestabilidad, double hDescarga)
         {
             calcularPrimerasLlegadas(TiempoLlegada, TiempoFinInforme, TiempoFinActualizacion, uniformeA, uniformeB);
-            MessageBox.Show("60");
             calcularTiempos(hInestabilidad);
-            MessageBox.Show("tiempos");
             ejecutar(filaDesde, filaHasta, cantSimulaciones, TiempoLlegada, TiempoFinInforme, 
                 TiempoFinActualizacion, reloj50, reloj70, reloj100, uniformeA, uniformeB, hDescarga) ;
-            MessageBox.Show("sim");
             calcularEstadisticas();
         }
 

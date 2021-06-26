@@ -33,9 +33,9 @@ namespace Numeros_aleatorios.Colas
 
         private void PantallaResultados_Load(object sender, EventArgs e)
         {
-            txtCantSimulaciones.Text = "500";
-            txtTiempoPromedioLlegadas.Text = "200";
-            txtTiempoPromedioFinInforme.Text = "700";
+            txtCantSimulaciones.Text = "200";
+            txtTiempoPromedioLlegadas.Text = "55";
+            txtTiempoPromedioFinInforme.Text = "200";
             txtTiempoPromedioFinActualizacion.Text = "40";
             txtFinCobroA.Text = "40";
             txtFinCobroB.Text = "60";

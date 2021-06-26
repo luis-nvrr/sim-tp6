@@ -162,8 +162,6 @@ namespace Numeros_aleatorios.Colas
             this.grdRangoResultados.AllowUserToDeleteRows = false;
             this.grdRangoResultados.AllowUserToResizeColumns = false;
             this.grdRangoResultados.AllowUserToResizeRows = false;
-            this.grdRangoResultados.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.grdRangoResultados.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.grdRangoResultados.BackgroundColor = System.Drawing.Color.White;
             this.grdRangoResultados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -364,9 +362,9 @@ namespace Numeros_aleatorios.Colas
             this.lblTiempoPromedioLlegadas.AutoSize = true;
             this.lblTiempoPromedioLlegadas.Location = new System.Drawing.Point(77, 81);
             this.lblTiempoPromedioLlegadas.Name = "lblTiempoPromedioLlegadas";
-            this.lblTiempoPromedioLlegadas.Size = new System.Drawing.Size(205, 21);
+            this.lblTiempoPromedioLlegadas.Size = new System.Drawing.Size(234, 21);
             this.lblTiempoPromedioLlegadas.TabIndex = 24;
-            this.lblTiempoPromedioLlegadas.Text = "Media de llegadas (Poisson):";
+            this.lblTiempoPromedioLlegadas.Text = "Tiempo entre llegadas (poisson):";
             // 
             // groupBox3
             // 

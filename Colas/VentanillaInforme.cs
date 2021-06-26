@@ -12,8 +12,8 @@ namespace Numeros_aleatorios.Colas
         string OCUPADO = "ocupado";
         string PURGANDO = "purgando";
 
-        public string estado { get; set; }
-        public double finInforme { get; set; }
+        public string estado;
+        public double finInforme;
 
         public double tiempoRestanteAtencion;
 

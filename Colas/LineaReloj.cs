@@ -20,32 +20,30 @@ namespace Numeros_aleatorios.Colas
        public Truncador truncador;
        public IGenerador poisson;
        public IGenerador uniforme;
-       public IGenerador exponencial; 
-       public string evento { get; set; }
-       public double reloj { get; set; }
-       public double tiempoParaLlegada { get; set; }
-       public double tiempoFinInforme { get; set; }
-       public double llegadaCliente { get; set; }
-       public double rndEstadoFactura { get; set; }
-       public string estadoFactura { get; set; }
-       public double rndConoceProcedimiento { get; set; }
-       public string conoceProcedimiento { get; set; }
-       public double rndFinCobro { get; set; }
-       public double tiempoFinCobro { get; set; }
-        public double rndFinInforme { get; set;  }
-        public List<Caja> cajas { get; set; }
-       public VentanillaActualizacion ventanillaActualizacion { get; set; }
-       public VentanillaInforme ventanillaInforme { get; set; }
-       public LineaReloj LineaRelojAnterior { get; set; }
+       public IGenerador exponencial;
+        public string evento;
+        public double reloj;
+        public double tiempoParaLlegada;
+        public double tiempoFinInforme;
+        public double llegadaCliente;
+        public double rndEstadoFactura;
+        public string estadoFactura;
+        public double rndConoceProcedimiento;
+        public string conoceProcedimiento;
+        public double rndFinCobro;
+        public double tiempoFinCobro;
+        public double rndFinInforme;
+        public List<Caja> cajas;
+        public VentanillaActualizacion ventanillaActualizacion;
+        public VentanillaInforme ventanillaInforme;
+        public LineaReloj LineaRelojAnterior;
 
         public Caja cajaFinCobro;
-
-        public long colaCaja;
 
         public List<Cliente> clientes;
 
         public SimulacionReloj colas;
-        public Queue<Cliente> clientesLibre;
+        public List<Cliente> clientesLibre;
 
         public double acumuladorTiemposEsperaEnCaja;
         public long cantidadClientesEsperan;
@@ -74,8 +72,7 @@ namespace Numeros_aleatorios.Colas
             this.cajas = new List<Caja>();
             cargarCajas(cantidadCajas);
             this.clientes = new List<Cliente>();
-            this.colaCaja = 0;
-            this.clientesLibre = new Queue<Cliente>();
+            this.clientesLibre = new List<Cliente>();
             this.rndFinInforme = -1;
             this.rndFinCobro = -1;
             this.rndConoceProcedimiento = -1;
@@ -84,7 +81,7 @@ namespace Numeros_aleatorios.Colas
             this.tiempoParaLlegada = 60;
             this.llegadaCliente = 60;
             this.tiempoFinCobro = -1;
-            this.exponencial = new GeneradorExponencialNegativa((GeneradorUniformeLenguaje)aleatorios, truncador, (double)(1.0/mediaFinInforme));
+            this.exponencial = new GeneradorExponencialNegativa((GeneradorUniformeLenguaje)aleatorios, truncador, (double)(3600.0/mediaFinInforme));
 
         }
 
@@ -97,14 +94,13 @@ namespace Numeros_aleatorios.Colas
             this.uniforme = anterior.uniforme;
             this.exponencial = anterior.exponencial;
 
-            this.ventanillaInforme = anterior.obtenerVentanillaInforme();
-            this.ventanillaActualizacion = anterior.obtenerVentanillaActualizacion();
+            this.ventanillaInforme = anterior.ventanillaInforme;
+            this.ventanillaActualizacion = anterior.ventanillaActualizacion ;
 
 
             this.cajas = anterior.cajas;
             this.clientes = anterior.clientes;
 
-            colaCaja = anterior.colaCaja;
             this.colas = colas;
             this.clientesLibre = anterior.clientesLibre;
 
@@ -132,18 +128,6 @@ namespace Numeros_aleatorios.Colas
             this.reloj100 = anterior.reloj100;
         }
 
-
-        public VentanillaInforme obtenerVentanillaInforme()
-        {
-            return this.ventanillaInforme;
-            //return (VentanillaInforme)this.ventanillaInforme.Clone();
-        }
-
-        public VentanillaActualizacion obtenerVentanillaActualizacion()
-        {
-            return this.ventanillaActualizacion;
-            //return (VentanillaActualizacion) this.ventanillaActualizacion.Clone();
-        }
 
         public void calcularFinInforme()
         {
@@ -322,9 +306,10 @@ namespace Numeros_aleatorios.Colas
         private Cliente buscarClienteLibre()
         {
             Cliente libre;
-            Boolean correcto = clientesLibre.TryDequeue(out libre);
-            if (correcto)
-            {
+
+            if(clientesLibre.Count > 0) {
+                libre = clientesLibre[clientesLibre.Count - 1];
+                clientesLibre.RemoveAt(clientesLibre.Count - 1);
                 return libre;
             }
 
@@ -462,7 +447,6 @@ namespace Numeros_aleatorios.Colas
             Caja.agregarACola(nuevoCliente);
             nuevoCliente.esperarCaja();
             nuevoCliente.horaLLegadaACaja = this.reloj;
-            this.colaCaja++;
         }
 
         private void atenderCaja(Cliente nuevoCliente, Caja cajaLibre, double tiempo)
@@ -488,13 +472,12 @@ namespace Numeros_aleatorios.Colas
                 this.tiempoFinCobro = uniforme.siguienteAleatorio();
                 Cliente clienteViejo = cajaFinCobro.clienteActual;
                 clienteViejo.limpiar();
-                clientesLibre.Enqueue(clienteViejo);
+                clientesLibre.Add(clienteViejo);
                 cajaFinCobro.liberar();
 
                 if (LineaRelojAnterior.tieneColaCobro())
                 {
                     Cliente clienteActual = Caja.siguienteCliente();
-                    colaCaja--;
                     atenderCaja(clienteActual, cajaFinCobro, tiempoFinCobro);
                     actualizarTiempoMaximoEsperaEnCola(clienteActual);
                     cantidadClientesEsperan++;
