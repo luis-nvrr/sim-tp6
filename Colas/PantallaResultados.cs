@@ -12,8 +12,6 @@ namespace Numeros_aleatorios.Colas
 {
     public partial class PantallaResultados : Form
     {
-        private int paginaActual;
-        private int filaSeleccionada;
         int cantSimulaciones;
         int desde;
         int hasta;
@@ -28,13 +26,12 @@ namespace Numeros_aleatorios.Colas
         public PantallaResultados()
         {
             InitializeComponent();
-            paginaActual = 1;
         }
 
         private void PantallaResultados_Load(object sender, EventArgs e)
         {
             txtCantSimulaciones.Text = "200";
-            txtTiempoPromedioLlegadas.Text = "55";
+            txtTiempoPromedioLlegadas.Text = "20";
             txtTiempoPromedioFinInforme.Text = "200";
             txtTiempoPromedioFinActualizacion.Text = "40";
             txtFinCobroA.Text = "40";
@@ -62,6 +59,17 @@ namespace Numeros_aleatorios.Colas
             this.grdRangoResultados.DoubleBuffered(true);
             grdRangoResultados.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.grdRangoResultados.DataSource = resultados;
+            grdRangoResultados.Columns[3].DefaultCellStyle.BackColor = Color.LightGreen;
+            grdRangoResultados.Columns[11].DefaultCellStyle.BackColor = Color.LightGreen;
+            grdRangoResultados.Columns[12].DefaultCellStyle.BackColor = Color.LightGreen;
+            grdRangoResultados.Columns[13].DefaultCellStyle.BackColor = Color.LightGreen;
+            grdRangoResultados.Columns[14].DefaultCellStyle.BackColor = Color.LightGreen;
+            grdRangoResultados.Columns[16].DefaultCellStyle.BackColor = Color.LightGreen;
+            grdRangoResultados.Columns[17].DefaultCellStyle.BackColor = Color.LightGreen;
+            grdRangoResultados.Columns[18].DefaultCellStyle.BackColor = Color.LightGreen;
+            grdRangoResultados.Columns[19].DefaultCellStyle.BackColor = Color.LightGreen;
+            grdRangoResultados.Columns[20].DefaultCellStyle.BackColor = Color.LightGreen;
+
         }
 
         private void grdRangoResultados_ColumnAdded(object sender, DataGridViewColumnEventArgs e)
@@ -100,7 +108,6 @@ namespace Numeros_aleatorios.Colas
         {
             cerrarVentanas();
 
-            paginaActual = 1;
             grdRangoResultados.DataSource = null;
             cantSimulaciones = int.Parse(txtCantSimulaciones.Text);
             desde = int.Parse(txtDesde.Text);

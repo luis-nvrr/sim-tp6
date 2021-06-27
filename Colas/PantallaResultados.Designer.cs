@@ -163,7 +163,7 @@ namespace Numeros_aleatorios.Colas
             this.grdRangoResultados.AllowUserToResizeColumns = false;
             this.grdRangoResultados.AllowUserToResizeRows = false;
             this.grdRangoResultados.BackgroundColor = System.Drawing.Color.White;
-            this.grdRangoResultados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grdRangoResultados.ColumnHeadersHeight = 50;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -174,6 +174,7 @@ namespace Numeros_aleatorios.Colas
             this.grdRangoResultados.DefaultCellStyle = dataGridViewCellStyle1;
             this.grdRangoResultados.Location = new System.Drawing.Point(20, 82);
             this.grdRangoResultados.Name = "grdRangoResultados";
+            this.grdRangoResultados.ReadOnly = true;
             this.grdRangoResultados.RowHeadersVisible = false;
             this.grdRangoResultados.RowTemplate.Height = 25;
             this.grdRangoResultados.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -212,7 +213,7 @@ namespace Numeros_aleatorios.Colas
             // lblCantSimulaciones
             // 
             this.lblCantSimulaciones.AutoSize = true;
-            this.lblCantSimulaciones.Location = new System.Drawing.Point(87, 38);
+            this.lblCantSimulaciones.Location = new System.Drawing.Point(87, 46);
             this.lblCantSimulaciones.Name = "lblCantSimulaciones";
             this.lblCantSimulaciones.Size = new System.Drawing.Size(196, 21);
             this.lblCantSimulaciones.TabIndex = 22;
@@ -262,7 +263,7 @@ namespace Numeros_aleatorios.Colas
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(151, 270);
+            this.label8.Location = new System.Drawing.Point(157, 270);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(132, 21);
             this.label8.TabIndex = 37;
@@ -271,7 +272,7 @@ namespace Numeros_aleatorios.Colas
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(125, 229);
+            this.label7.Location = new System.Drawing.Point(131, 229);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(158, 21);
             this.label7.TabIndex = 32;
@@ -319,7 +320,7 @@ namespace Numeros_aleatorios.Colas
             // lblTiempoPromedioFinCobro
             // 
             this.lblTiempoPromedioFinCobro.AutoSize = true;
-            this.lblTiempoPromedioFinCobro.Location = new System.Drawing.Point(62, 190);
+            this.lblTiempoPromedioFinCobro.Location = new System.Drawing.Point(68, 190);
             this.lblTiempoPromedioFinCobro.Name = "lblTiempoPromedioFinCobro";
             this.lblTiempoPromedioFinCobro.Size = new System.Drawing.Size(177, 21);
             this.lblTiempoPromedioFinCobro.TabIndex = 31;
@@ -328,20 +329,20 @@ namespace Numeros_aleatorios.Colas
             // lblTiempoPromedioFinActualizacion
             // 
             this.lblTiempoPromedioFinActualizacion.AutoSize = true;
-            this.lblTiempoPromedioFinActualizacion.Location = new System.Drawing.Point(-22, 151);
+            this.lblTiempoPromedioFinActualizacion.Location = new System.Drawing.Point(9, 151);
             this.lblTiempoPromedioFinActualizacion.Name = "lblTiempoPromedioFinActualizacion";
-            this.lblTiempoPromedioFinActualizacion.Size = new System.Drawing.Size(304, 21);
+            this.lblTiempoPromedioFinActualizacion.Size = new System.Drawing.Size(277, 21);
             this.lblTiempoPromedioFinActualizacion.TabIndex = 30;
-            this.lblTiempoPromedioFinActualizacion.Text = "Tiempo Promedio de Actualización (const):";
+            this.lblTiempoPromedioFinActualizacion.Text = "Tiempo prom. de Actualización (const):";
             // 
             // lblTiempoPromedioFinInforme
             // 
             this.lblTiempoPromedioFinInforme.AutoSize = true;
-            this.lblTiempoPromedioFinInforme.Location = new System.Drawing.Point(-2, 116);
+            this.lblTiempoPromedioFinInforme.Location = new System.Drawing.Point(25, 116);
             this.lblTiempoPromedioFinInforme.Name = "lblTiempoPromedioFinInforme";
-            this.lblTiempoPromedioFinInforme.Size = new System.Drawing.Size(285, 21);
+            this.lblTiempoPromedioFinInforme.Size = new System.Drawing.Size(258, 21);
             this.lblTiempoPromedioFinInforme.TabIndex = 28;
-            this.lblTiempoPromedioFinInforme.Text = "Tiempo promedio de informe (Exp neg):";
+            this.lblTiempoPromedioFinInforme.Text = "Tiempo prom. de informe (Exp neg):";
             // 
             // txtTiempoPromedioFinInforme
             // 
@@ -360,11 +361,11 @@ namespace Numeros_aleatorios.Colas
             // lblTiempoPromedioLlegadas
             // 
             this.lblTiempoPromedioLlegadas.AutoSize = true;
-            this.lblTiempoPromedioLlegadas.Location = new System.Drawing.Point(77, 81);
+            this.lblTiempoPromedioLlegadas.Location = new System.Drawing.Point(1, 81);
             this.lblTiempoPromedioLlegadas.Name = "lblTiempoPromedioLlegadas";
-            this.lblTiempoPromedioLlegadas.Size = new System.Drawing.Size(234, 21);
+            this.lblTiempoPromedioLlegadas.Size = new System.Drawing.Size(282, 21);
             this.lblTiempoPromedioLlegadas.TabIndex = 24;
-            this.lblTiempoPromedioLlegadas.Text = "Tiempo entre llegadas (poisson):";
+            this.lblTiempoPromedioLlegadas.Text = "Tiempo medio entre llegadas (poisson):";
             // 
             // groupBox3
             // 
