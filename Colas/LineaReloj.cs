@@ -15,8 +15,9 @@ namespace Numeros_aleatorios.Colas
         public string FIN_INFORME = "fin de informe";
         public string FIN_ACTUALIZACION = "fin de actualizacion";
         public string FIN_COBRO = "fin de cobro";
+        public string INICIALIZACION = "inicializacion";
 
-       public IGenerador aleatorios;
+        public IGenerador aleatorios;
        public Truncador truncador;
        public IGenerador poisson;
        public IGenerador uniforme;
@@ -81,8 +82,8 @@ namespace Numeros_aleatorios.Colas
             this.tiempoParaLlegada = 60;
             this.llegadaCliente = 60;
             this.tiempoFinCobro = -1;
-            this.exponencial = new GeneradorExponencialNegativa((GeneradorUniformeLenguaje)aleatorios, truncador, (double)(3600.0/mediaFinInforme));
-
+            this.exponencial = new GeneradorExponencialNegativa((GeneradorUniformeLenguaje)aleatorios, truncador, (double)(1.0/mediaFinInforme));
+            this.evento = INICIALIZACION;
         }
 
         public LineaReloj(LineaReloj anterior, SimulacionReloj colas, int filaDesde, int filaHasta, int idFila)
