@@ -81,8 +81,8 @@ namespace Numeros_aleatorios.Colas
             this.rndConoceProcedimiento = -1;
             this.rndEstadoFactura = -1;
             this.tiempoFinInforme = -1;
-            this.tiempoParaLlegada = 60;
-            this.llegadaCliente = 60;
+            this.tiempoParaLlegada = poisson.siguienteAleatorio();
+            this.llegadaCliente = tiempoParaLlegada ;
             this.tiempoFinCobro = -1;
             this.exponencial = new GeneradorExponencialNegativa((GeneradorUniformeLenguaje)aleatorios, truncador, (double)(1.0/mediaFinInforme));
             this.estadoFactura = "";
